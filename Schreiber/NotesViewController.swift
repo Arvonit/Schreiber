@@ -37,7 +37,6 @@ class NotesViewController: UIViewController {
         configCollectionView()
         configDataSource()
         configFRC()
-        fetchSnapshot()
     }
     
     func configVC() {
@@ -45,6 +44,19 @@ class NotesViewController: UIViewController {
         if let folder = folder {
             title = folder.safeName
         }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(addNewNote)
+        )
+    }
+    
+    @objc func addNewNote() {
+        let newNote = Note(folder: folder, context: dataController.context)
+        dataController.context.insert(newNote)
+        let vc = NoteEditorController(note: newNote)
+        print(newNote.safeID)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func configCollectionView() {
@@ -96,18 +108,16 @@ class NotesViewController: UIViewController {
         try! frc.performFetch()
     }
     
-    func fetchSnapshot() {
+}
+
+extension NotesViewController: NSFetchedResultsControllerDelegate {
+    // TODO: View does not update properly
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        //        print("didChangeContentWith called")
         var ddsSnapshot = NSDiffableDataSourceSnapshot<Int, Note>()
         ddsSnapshot.appendSections([0])
         ddsSnapshot.appendItems(frc.fetchedObjects ?? [])
         dataSource?.apply(ddsSnapshot, animatingDifferences: true)
-    }
-    
-}
-
-extension NotesViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        fetchSnapshot()
     }
 }
 
@@ -115,8 +125,9 @@ extension NotesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
         let note = snapshot.itemIdentifiers[indexPath.row]
-        let vc = NoteEditorViewController(note: note)
+        let vc = NoteEditorController(note: note)
         print(note.safeID)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
+

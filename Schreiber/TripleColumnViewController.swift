@@ -26,7 +26,7 @@ class TripleColumnViewController: UISplitViewController {
         // Add lists to split view
         setViewController(FoldersViewController(), for: .primary)
         setViewController(NotesViewController(), for: .supplementary)
-        setViewController(NoteEditorViewController(), for: .secondary)
+        setViewController(NoteEditorController(), for: .secondary)
 
         // Specify titles for views
         viewController(for: .primary)?.title = "Schreiber"

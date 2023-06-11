@@ -26,6 +26,27 @@ class FoldersViewController: UIViewController {
     
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(addNewFolder)
+        )
+    }
+    
+    @objc func addNewFolder() {
+        let alert = UIAlertController(title: "Add new folder", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "Name"
+        }
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak alert] _ in
+            guard let name = alert?.textFields?.first?.text else { return }
+            let newFolder = Folder(name: name, context: self.dataController.context)
+            self.dataController.context.insert(newFolder)
+            self.dataController.save()
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
+        
+        present(alert, animated: true)
     }
     
     func configCollectionView() {
@@ -81,7 +102,6 @@ class FoldersViewController: UIViewController {
         ddsSnapshot.appendItems(controller.fetchedObjects ?? [])
         dataSource?.apply(ddsSnapshot, animatingDifferences: true)
     }
-    
 }
 
 extension FoldersViewController: NSFetchedResultsControllerDelegate {

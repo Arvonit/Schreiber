@@ -1,5 +1,5 @@
 //
-//  NoteEditorViewController.swift
+//  NoteEditorController.swift
 //  Schreiber
 //
 //  Created by Arvind on 6/10/23.
@@ -7,9 +7,10 @@
 
 import UIKit
 
-class NoteEditorViewController: UIViewController {
+class NoteEditorController: UIViewController {
     
     let note: Note?
+    let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     
     var editor: UITextView!
     
@@ -26,6 +27,18 @@ class NoteEditorViewController: UIViewController {
         super.viewDidLoad()
         configVC()
         configTextView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        guard let note = note else { return }
+//        note.safeContent = editor.text
+        if editor.text != "" && note.safeContent != editor.text {
+            note.safeContent = editor.text
+            dataController.save()
+        } else {
+            dataController.delete(note)
+        }
     }
     
     func configVC() {
