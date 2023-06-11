@@ -10,10 +10,6 @@ import CoreData
 
 class FoldersViewController: UIViewController {
     
-    enum Section {
-        case main
-    }
-    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, Folder>!
     var controller: NSFetchedResultsController<Folder>!
@@ -28,19 +24,22 @@ class FoldersViewController: UIViewController {
     }
     
     func configVC() {
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func configCollectionView() {
-        let configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
+        let configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+//        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        collectionView.delegate = self
         view.addSubview(collectionView)
     }
     
     func configDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Folder> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
-            content.text = item.name
+            content.text = item.safeName
             content.image = UIImage(systemName: item.safeIcon)
             cell.contentConfiguration = content
         }
@@ -79,6 +78,13 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-#Preview {
-    TripleColumnViewController()
+extension FoldersViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let snapshot = dataSource.snapshot()
+        let folder = snapshot.itemIdentifiers[indexPath.row]
+        let vc = NotesViewController(folder: folder)
+        print(folder.safeName)
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
+

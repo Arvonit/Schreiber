@@ -14,7 +14,7 @@ class TripleColumnViewController: UISplitViewController {
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -37,4 +37,8 @@ class TripleColumnViewController: UISplitViewController {
         viewController(for: .supplementary)?.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+}
+
+#Preview {
+    TripleColumnViewController()
 }
