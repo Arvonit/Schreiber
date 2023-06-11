@@ -10,6 +10,7 @@ import CoreData
 
 class NotesViewController: UIViewController {
     
+    let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     let folder: Folder?
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -47,7 +48,19 @@ class NotesViewController: UIViewController {
     }
     
     func configCollectionView() {
-        let configuration = UICollectionLayoutListConfiguration(appearance: .sidebarPlain)
+        var configuration = UICollectionLayoutListConfiguration(appearance: .sidebarPlain)
+        configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+            guard let self = self else { return nil }
+
+            let note = self.dataSource.snapshot().itemIdentifiers[indexPath.row]
+            
+            let del = UIContextualAction(style: .destructive, title: "Delete") {
+                action, view, completion in
+                self.dataController.delete(note)
+                completion(true)
+            }
+            return UISwipeActionsConfiguration(actions: [del])
+        }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.delegate = self
@@ -70,7 +83,6 @@ class NotesViewController: UIViewController {
     }
     
     func configFRC() {
-        let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
         let request = Note.fetchRequest()
         if let folder = folder {
             request.predicate = NSPredicate(format: "folder == %@", folder)
@@ -104,7 +116,7 @@ extension NotesViewController: UICollectionViewDelegate {
         let snapshot = dataSource.snapshot()
         let note = snapshot.itemIdentifiers[indexPath.row]
         let vc = NoteEditorViewController(note: note)
-        print(note.id)
+        print(note.safeID)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

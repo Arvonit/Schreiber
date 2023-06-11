@@ -10,6 +10,7 @@ import CoreData
 
 class FoldersViewController: UIViewController {
     
+    let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, Folder>!
     var controller: NSFetchedResultsController<Folder>!
@@ -28,7 +29,19 @@ class FoldersViewController: UIViewController {
     }
     
     func configCollectionView() {
-        let configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+            guard let self = self else { return nil }
+
+            let folder = self.dataSource.snapshot().itemIdentifiers[indexPath.row]
+            
+            let del = UIContextualAction(style: .destructive, title: "Delete") {
+                action, view, completion in
+                self.dataController.delete(folder)
+                completion(true)
+            }
+            return UISwipeActionsConfiguration(actions: [del])
+        }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
 //        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -52,7 +65,6 @@ class FoldersViewController: UIViewController {
     }
     
     func configFRC() {
-        let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
         let request = Folder.fetchRequest()
         request.sortDescriptors = [
             NSSortDescriptor(key: "name", ascending: true)
