@@ -20,6 +20,7 @@ extension Note {
         self.date = date
         self.id = UUID()
         self.folder = folder
+        try! context.obtainPermanentIDs(for: [self])
     }
     
     var safeContent: String {
@@ -59,6 +60,7 @@ extension Folder {
         self.id = UUID()
         self.name = name
         self.icon = icon
+        try! context.obtainPermanentIDs(for: [self])
     }
     
     var safeName: String {

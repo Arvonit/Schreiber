@@ -30,7 +30,7 @@ class TripleColumnViewController: UISplitViewController {
 
         // Specify titles for views
         viewController(for: .primary)?.title = "Schreiber"
-        viewController(for: .supplementary)?.title = "Folder"
+        viewController(for: .supplementary)?.title = "All Notes"
         
         // Use large titles in lists
         viewController(for: .primary)?.navigationController?.navigationBar.prefersLargeTitles = true

@@ -25,6 +25,7 @@ class FoldersViewController: UIViewController {
     
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
+        title = "Schreiber"
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
@@ -52,7 +53,7 @@ class FoldersViewController: UIViewController {
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
             
-            print(dataController.context.hasChanges)
+            print(dataSource.snapshot().itemIdentifiers[indexPath.row].isTemporaryID)
             guard let folder: Folder = foo(with: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else {
                 return nil
             }
@@ -76,7 +77,7 @@ class FoldersViewController: UIViewController {
             let object = try dataController.context.existingObject(with: moID)
             return object as? T
         } catch let err {
-            return nil
+            fatalError("fuuuuuuuckkk " + err.localizedDescription)
         }
     }
     
@@ -84,7 +85,7 @@ class FoldersViewController: UIViewController {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
             guard let folder: Folder = self.foo(with: item) else {
-                preconditionFailure("fuck")
+                return
             }
             content.text = folder.safeName
             content.image = UIImage(systemName: folder.safeIcon)
@@ -100,6 +101,7 @@ class FoldersViewController: UIViewController {
     
     func configFRC() {
         let request = Folder.fetchRequest()
+        request.predicate = NSPredicate(value: true)
         request.sortDescriptors = [
             NSSortDescriptor(key: "name", ascending: true)
         ]
@@ -108,13 +110,6 @@ class FoldersViewController: UIViewController {
         frc.delegate = self
         try! frc.performFetch()
     }
-    
-//    func fetchSnapshot() {
-//        var ddsSnapshot = NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>()
-//        ddsSnapshot.appendSections([0])
-//        ddsSnapshot.appendItems(frc.fetchedObjects ?? [])
-//        dataSource?.apply(ddsSnapshot, animatingDifferences: true)
-//    }
 }
 
 extension FoldersViewController: NSFetchedResultsControllerDelegate {
@@ -127,6 +122,7 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
                 return nil
             }
             guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+            
             return itemIdentifier
         }
         snapshot.reloadItems(reloadIdentifiers)
@@ -138,11 +134,9 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
 extension FoldersViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
-        print(snapshot.itemIdentifiers[indexPath.row])
         guard let folder: Folder = foo(with: snapshot.itemIdentifiers[indexPath.row]) else {
             return
         }
-        print(folder.safeID)
         let vc = NotesViewController(folder: folder)
         navigationController?.pushViewController(vc, animated: true)
     }

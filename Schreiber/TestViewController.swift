@@ -135,7 +135,6 @@ extension TestViewController: UICollectionViewDelegate {
 //            return
 //        }
 //        let vc = NoteEditorController(note: note)
-//        print(note.safeID)
 //        navigationController?.pushViewController(vc, animated: true)
     }
 }

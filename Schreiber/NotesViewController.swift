@@ -52,6 +52,8 @@ class NotesViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         if let folder = folder {
             title = folder.safeName
+        } else {
+            title = "All Notes"
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
@@ -64,7 +66,6 @@ class NotesViewController: UIViewController {
         let newNote = Note(folder: folder, context: dataController.context)
         dataController.save()
         let vc = NoteEditorController(note: newNote)
-        print(newNote.safeID)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -89,19 +90,6 @@ class NotesViewController: UIViewController {
     }
     
     func configDataSource() {
-//        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Note> { (cell, indexPath, item) in
-//            var content = cell.defaultContentConfiguration()
-//            content.text = item.title
-//            content.secondaryText = self.dateFormatter.string(from: item.safeDate)
-//            cell.contentConfiguration = content
-//        }
-//        
-//        dataSource = UICollectionViewDiffableDataSource<Int, Note>(collectionView: collectionView) {
-//            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Note) -> UICollectionViewCell? in
-//            
-//            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
-//        }
-        
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
             guard let note: Note = self.foo(with: item) else {
@@ -160,7 +148,6 @@ extension NotesViewController: UICollectionViewDelegate {
             return
         }
         let vc = NoteEditorController(note: note)
-        print(note.safeID)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -36,8 +36,8 @@ class DataController {
     }
     
     static let preview: DataController = {
-        let data = DataController()
-//        data.createSampleData()
+        let data = DataController(inMemory: true)
+        data.createSampleData()
         return data
     }()    
     
@@ -49,13 +49,10 @@ class DataController {
         if context.hasChanges {
             do {
                 try context.save()
-                print("SAVED")
             } catch {
                 // TODO: Display an error alert to the user and send a log crash to me
                 fatalError("Fatal error while saving changes: \(error.localizedDescription)")
             }
-        } else {
-            print("NO CHANGES")
         }
     }
     
