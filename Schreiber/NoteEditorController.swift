@@ -9,13 +9,15 @@ import UIKit
 
 class NoteEditorController: UIViewController {
     
-    let note: Note?
+    let note: Note
+    let initialContent: String
     let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     
     var editor: UITextView!
     
-    init(note: Note? = nil) {
+    init(note: Note) {
         self.note = note
+        self.initialContent = note.safeContent
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,27 +33,38 @@ class NoteEditorController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        guard let note = note else { return }
-//        note.safeContent = editor.text
-//        if editor.text != "" && note.safeContent != editor.text {
-        note.safeContent = editor.text
-        dataController.save()
-//        } else {
-//            dataController.delete(note)
-//        }
+        
+        // Delete if the content is empty
+        // Save if there are changes
+        if note.safeContent == "" {
+            dataController.delete(note)
+            dataController.save()
+        } else if initialContent != note.safeContent {
+            dataController.save()
+        }
     }
     
     func configVC() {
-        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .never
+        title = note.title
     }
     
     func configTextView() {
         editor = UITextView(frame: view.bounds)
         editor.font = .preferredFont(forTextStyle: .body)
-        if let note = note {
-            editor.text = note.safeContent
-        }
+        editor.text = note.safeContent
+        editor.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        editor.delegate = self
         view.addSubview(editor)
     }
     
+}
+
+extension NoteEditorController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        // Update content of note object when text is edited
+        // Also update the title of the view
+        note.safeContent = textView.text
+        title = note.title
+    }
 }

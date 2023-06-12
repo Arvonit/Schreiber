@@ -39,10 +39,19 @@ class DataController {
         let data = DataController(inMemory: true)
         data.createSampleData()
         return data
-    }()    
+    }()
     
     var context: NSManagedObjectContext {
         container.viewContext
+    }
+    
+    func getManagedObject<T>(id: NSManagedObjectID) -> T? {
+        do {
+            let object = try context.existingObject(with: id)
+            return object as? T
+        } catch let err {
+            fatalError(err.localizedDescription)
+        }
     }
     
     func save() {

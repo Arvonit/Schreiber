@@ -38,15 +38,8 @@ class NotesViewController: UIViewController {
         configDataSource()
         configFRC()
     }
+        
     
-    func foo<T>(with moID: NSManagedObjectID) -> T? {
-        do {
-            let object = try dataController.context.existingObject(with: moID)
-            return object as? T
-        } catch let err {
-            fatalError(err.localizedDescription)
-        }
-    }
     
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -65,8 +58,25 @@ class NotesViewController: UIViewController {
     @objc func addNewNote() {
         let newNote = Note(folder: folder, context: dataController.context)
         dataController.save()
+        
+        var indexPath: IndexPath? = nil
+        
+        if let index = dataSource.snapshot().indexOfItem(newNote.objectID) {
+            indexPath = IndexPath(row: index, section: 0)
+            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+        }
+        
         let vc = NoteEditorController(note: newNote)
-        navigationController?.pushViewController(vc, animated: true)
+        
+        if splitViewController!.isCollapsed {
+            if let indexPath = indexPath {
+                collectionView.deselectItem(at: indexPath, animated: true)
+            }
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            splitViewController?.setViewController(nil, for: .secondary)
+            splitViewController?.setViewController(vc, for: .secondary)
+        }
     }
     
     func configCollectionView() {
@@ -74,7 +84,7 @@ class NotesViewController: UIViewController {
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
 
-            guard let note: Note = foo(with: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
+            guard let note: Note = dataController.getManagedObject(id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
             
             let del = UIContextualAction(style: .destructive, title: "Delete") {
                 action, view, completion in
@@ -85,6 +95,7 @@ class NotesViewController: UIViewController {
         }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         collectionView.delegate = self
         view.addSubview(collectionView)
     }
@@ -92,7 +103,7 @@ class NotesViewController: UIViewController {
     func configDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
-            guard let note: Note = self.foo(with: item) else {
+            guard let note: Note = self.dataController.getManagedObject(id: item) else {
                 preconditionFailure("fuck")
             }
             content.text = note.title
@@ -144,11 +155,18 @@ extension NotesViewController: NSFetchedResultsControllerDelegate {
 extension NotesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
-        guard let note: Note = foo(with: snapshot.itemIdentifiers[indexPath.row]) else {
+        guard let note: Note = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
             return
         }
         let vc = NoteEditorController(note: note)
-        navigationController?.pushViewController(vc, animated: true)
+        
+        if splitViewController!.isCollapsed {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            splitViewController?.setViewController(nil, for: .secondary)
+            splitViewController?.setViewController(vc, for: .secondary)
+        }
     }
 }
 

@@ -54,7 +54,7 @@ class FoldersViewController: UIViewController {
             guard let self = self else { return nil }
             
             print(dataSource.snapshot().itemIdentifiers[indexPath.row].isTemporaryID)
-            guard let folder: Folder = foo(with: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else {
+            guard let folder: Folder = dataController.getManagedObject(id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else {
                 return nil
             }
             
@@ -67,24 +67,15 @@ class FoldersViewController: UIViewController {
         }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        //        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         collectionView.delegate = self
         view.addSubview(collectionView)
     }
-    
-    func foo<T>(with moID: NSManagedObjectID) -> T? {
-        do {
-            let object = try dataController.context.existingObject(with: moID)
-            return object as? T
-        } catch let err {
-            fatalError("fuuuuuuuckkk " + err.localizedDescription)
-        }
-    }
-    
+        
     func configDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
-            guard let folder: Folder = self.foo(with: item) else {
+            guard let folder: Folder = self.dataController.getManagedObject(id: item) else {
                 return
             }
             content.text = folder.safeName
@@ -134,11 +125,16 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
 extension FoldersViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
-        guard let folder: Folder = foo(with: snapshot.itemIdentifiers[indexPath.row]) else {
+        guard let folder: Folder = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
             return
         }
         let vc = NotesViewController(folder: folder)
-        navigationController?.pushViewController(vc, animated: true)
+        
+        if splitViewController!.isCollapsed {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            splitViewController?.setViewController(vc, for: .supplementary)
+        }
     }
 }
-

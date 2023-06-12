@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A421D0312A36A2A400FF0613 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A421D0302A36A2A400FF0613 /* TestViewController.swift */; };
 		A4E465162A35634900DD8B86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465152A35634900DD8B86 /* AppDelegate.swift */; };
 		A4E465182A35634900DD8B86 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465172A35634900DD8B86 /* SceneDelegate.swift */; };
 		A4E465202A35634900DD8B86 /* Schreiber.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A4E4651E2A35634900DD8B86 /* Schreiber.xcdatamodeld */; };
@@ -20,11 +19,10 @@
 		A4E465352A357F1800DD8B86 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465342A357F1800DD8B86 /* DataController.swift */; };
 		A4E465372A357F6200DD8B86 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465362A357F6200DD8B86 /* Models.swift */; };
 		A4E465392A35802400DD8B86 /* NSManagedObjectContext+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465382A35802400DD8B86 /* NSManagedObjectContext+Helpers.swift */; };
-		A4E4653B2A36018E00DD8B86 /* TripleColumnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E4653A2A36018E00DD8B86 /* TripleColumnViewController.swift */; };
+		A4E4653B2A36018E00DD8B86 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E4653A2A36018E00DD8B86 /* RootViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A421D0302A36A2A400FF0613 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		A4E465122A35634900DD8B86 /* Schreiber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schreiber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4E465152A35634900DD8B86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A4E465172A35634900DD8B86 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,7 +37,7 @@
 		A4E465342A357F1800DD8B86 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		A4E465362A357F6200DD8B86 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		A4E465382A35802400DD8B86 /* NSManagedObjectContext+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Helpers.swift"; sourceTree = "<group>"; };
-		A4E4653A2A36018E00DD8B86 /* TripleColumnViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripleColumnViewController.swift; sourceTree = "<group>"; };
+		A4E4653A2A36018E00DD8B86 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +76,7 @@
 				A4E465232A35634A00DD8B86 /* LaunchScreen.storyboard */,
 				A4E465262A35634A00DD8B86 /* Info.plist */,
 				A4E4651E2A35634900DD8B86 /* Schreiber.xcdatamodeld */,
-				A4E4653A2A36018E00DD8B86 /* TripleColumnViewController.swift */,
+				A4E4653A2A36018E00DD8B86 /* RootViewController.swift */,
 				A4E4652C2A3569CA00DD8B86 /* FoldersViewController.swift */,
 				A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */,
 				A4E465302A3573F400DD8B86 /* NoteEditorController.swift */,
@@ -86,7 +84,6 @@
 				A4E465342A357F1800DD8B86 /* DataController.swift */,
 				A4E465382A35802400DD8B86 /* NSManagedObjectContext+Helpers.swift */,
 				A4E465362A357F6200DD8B86 /* Models.swift */,
-				A421D0302A36A2A400FF0613 /* TestViewController.swift */,
 			);
 			path = Schreiber;
 			sourceTree = "<group>";
@@ -167,11 +164,10 @@
 				A4E465202A35634900DD8B86 /* Schreiber.xcdatamodeld in Sources */,
 				A4E465162A35634900DD8B86 /* AppDelegate.swift in Sources */,
 				A4E465392A35802400DD8B86 /* NSManagedObjectContext+Helpers.swift in Sources */,
-				A4E4653B2A36018E00DD8B86 /* TripleColumnViewController.swift in Sources */,
+				A4E4653B2A36018E00DD8B86 /* RootViewController.swift in Sources */,
 				A4E465352A357F1800DD8B86 /* DataController.swift in Sources */,
 				A4E465372A357F6200DD8B86 /* Models.swift in Sources */,
 				A4E465182A35634900DD8B86 /* SceneDelegate.swift in Sources */,
-				A421D0312A36A2A400FF0613 /* TestViewController.swift in Sources */,
 				A4E465332A35762700DD8B86 /* ViewControllerPreview.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,7 +319,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -351,7 +347,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
