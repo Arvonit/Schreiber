@@ -39,6 +39,8 @@ class TripleColumnViewController: UISplitViewController {
     
 }
 
+#if swift(>=5.9)
 #Preview {
     TripleColumnViewController()
 }
+#endif

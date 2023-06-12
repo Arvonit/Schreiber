@@ -12,8 +12,8 @@ class FoldersViewController: UIViewController {
     
     let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Int, Folder>!
-    var controller: NSFetchedResultsController<Folder>!
+    var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
+    var frc: NSFetchedResultsController<Folder>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +21,6 @@ class FoldersViewController: UIViewController {
         configCollectionView()
         configDataSource()
         configFRC()
-        fetchSnapshot()
     }
     
     func configVC() {
@@ -40,8 +39,7 @@ class FoldersViewController: UIViewController {
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak alert] _ in
             guard let name = alert?.textFields?.first?.text else { return }
-            let newFolder = Folder(name: name, context: self.dataController.context)
-            self.dataController.context.insert(newFolder)
+            let _ = Folder(name: name, context: self.dataController.context)
             self.dataController.save()
         })
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
@@ -53,8 +51,11 @@ class FoldersViewController: UIViewController {
         var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
-
-            let folder = self.dataSource.snapshot().itemIdentifiers[indexPath.row]
+            
+            print(dataController.context.hasChanges)
+            guard let folder: Folder = foo(with: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else {
+                return nil
+            }
             
             let del = UIContextualAction(style: .destructive, title: "Delete") {
                 action, view, completion in
@@ -65,21 +66,33 @@ class FoldersViewController: UIViewController {
         }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-//        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        //        collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         collectionView.delegate = self
         view.addSubview(collectionView)
     }
     
+    func foo<T>(with moID: NSManagedObjectID) -> T? {
+        do {
+            let object = try dataController.context.existingObject(with: moID)
+            return object as? T
+        } catch let err {
+            return nil
+        }
+    }
+    
     func configDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Folder> { (cell, indexPath, item) in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
-            content.text = item.safeName
-            content.image = UIImage(systemName: item.safeIcon)
+            guard let folder: Folder = self.foo(with: item) else {
+                preconditionFailure("fuck")
+            }
+            content.text = folder.safeName
+            content.image = UIImage(systemName: folder.safeIcon)
             cell.contentConfiguration = content
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Int, Folder>(collectionView: collectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Folder) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: NSManagedObjectID) -> UICollectionViewCell? in
             
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
         }
@@ -91,31 +104,46 @@ class FoldersViewController: UIViewController {
             NSSortDescriptor(key: "name", ascending: true)
         ]
         
-        controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
-        controller.delegate = self
-        try! controller.performFetch()
+        frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+        try! frc.performFetch()
     }
     
-    func fetchSnapshot() {
-        var ddsSnapshot = NSDiffableDataSourceSnapshot<Int, Folder>()
-        ddsSnapshot.appendSections([0])
-        ddsSnapshot.appendItems(controller.fetchedObjects ?? [])
-        dataSource?.apply(ddsSnapshot, animatingDifferences: true)
-    }
+//    func fetchSnapshot() {
+//        var ddsSnapshot = NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>()
+//        ddsSnapshot.appendSections([0])
+//        ddsSnapshot.appendItems(frc.fetchedObjects ?? [])
+//        dataSource?.apply(ddsSnapshot, animatingDifferences: true)
+//    }
 }
 
 extension FoldersViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        fetchSnapshot()
+        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+        let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+
+        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+                return nil
+            }
+            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+            return itemIdentifier
+        }
+        snapshot.reloadItems(reloadIdentifiers)
+
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
     }
 }
 
 extension FoldersViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
-        let folder = snapshot.itemIdentifiers[indexPath.row]
+        print(snapshot.itemIdentifiers[indexPath.row])
+        guard let folder: Folder = foo(with: snapshot.itemIdentifiers[indexPath.row]) else {
+            return
+        }
+        print(folder.safeID)
         let vc = NotesViewController(folder: folder)
-        print(folder.safeName)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

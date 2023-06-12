@@ -12,14 +12,13 @@ extension Note {
     convenience init(
         content: String = "",
         date: Date = Date.now,
-        id: UUID = UUID(),
         folder: Folder? = nil,
         context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.content = content
         self.date = date
-        self.id = id
+        self.id = UUID()
         self.folder = folder
     }
     
@@ -57,6 +56,7 @@ extension Folder {
         
     convenience init(name: String, icon: String = "folder", context: NSManagedObjectContext) {
         self.init(context: context)
+        self.id = UUID()
         self.name = name
         self.icon = icon
     }
@@ -69,6 +69,11 @@ extension Folder {
     var safeIcon: String {
         get { icon ?? "folder" }
         set { icon = newValue }
+    }
+    
+    var safeID: UUID {
+        get { id ?? UUID() }
+        set { id = newValue }
     }
     
     var safeNotes: Set<Note> {

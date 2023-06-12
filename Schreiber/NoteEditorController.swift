@@ -33,12 +33,12 @@ class NoteEditorController: UIViewController {
         super.viewWillDisappear(animated)
         guard let note = note else { return }
 //        note.safeContent = editor.text
-        if editor.text != "" && note.safeContent != editor.text {
-            note.safeContent = editor.text
-            dataController.save()
-        } else {
-            dataController.delete(note)
-        }
+//        if editor.text != "" && note.safeContent != editor.text {
+        note.safeContent = editor.text
+        dataController.save()
+//        } else {
+//            dataController.delete(note)
+//        }
     }
     
     func configVC() {

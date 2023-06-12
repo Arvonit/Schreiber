@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds) // Fill up the whole screen
         window?.windowScene = windowScene
         window?.rootViewController = TripleColumnViewController()
+//        window?.rootViewController = UINavigationController(rootViewController: TestViewController())
         window?.makeKeyAndVisible()
     }
     

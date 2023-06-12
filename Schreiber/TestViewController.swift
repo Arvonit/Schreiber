@@ -1,5 +1,5 @@
 //
-//  NotesViewController.swift
+//  TestViewController.swift
 //  Schreiber
 //
 //  Created by Arvind on 6/10/23.
@@ -8,29 +8,13 @@
 import UIKit
 import CoreData
 
-class NotesViewController: UIViewController {
+class TestViewController: UIViewController {
     
     let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
-    let folder: Folder?
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM d, yyyy h:mm a"
-        return formatter
-    }()
-    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
-    var frc: NSFetchedResultsController<Note>!
-    
-    init(folder: Folder? = nil) {
-        self.folder = folder
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    var frc: NSFetchedResultsController<Folder>!
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         configVC()
@@ -50,9 +34,6 @@ class NotesViewController: UIViewController {
     
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        if let folder = folder {
-            title = folder.safeName
-        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
@@ -61,11 +42,8 @@ class NotesViewController: UIViewController {
     }
     
     @objc func addNewNote() {
-        let newNote = Note(folder: folder, context: dataController.context)
+        let _ = Folder(name: "Test", context: dataController.context)
         dataController.save()
-        let vc = NoteEditorController(note: newNote)
-        print(newNote.safeID)
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     func configCollectionView() {
@@ -73,11 +51,11 @@ class NotesViewController: UIViewController {
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
 
-            guard let note: Note = foo(with: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
+            guard let folder: Folder = foo(with: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
             
             let del = UIContextualAction(style: .destructive, title: "Delete") {
                 action, view, completion in
-                self.dataController.delete(note)
+                self.dataController.delete(folder)
                 completion(true)
             }
             return UISwipeActionsConfiguration(actions: [del])
@@ -95,20 +73,20 @@ class NotesViewController: UIViewController {
 //            content.secondaryText = self.dateFormatter.string(from: item.safeDate)
 //            cell.contentConfiguration = content
 //        }
-//        
+//
 //        dataSource = UICollectionViewDiffableDataSource<Int, Note>(collectionView: collectionView) {
 //            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Note) -> UICollectionViewCell? in
-//            
+//
 //            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
 //        }
         
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
             var content = cell.defaultContentConfiguration()
-            guard let note: Note = self.foo(with: item) else {
+            guard let folder: Folder = self.foo(with: item) else {
                 preconditionFailure("fuck")
             }
-            content.text = note.title
-            content.secondaryText = self.dateFormatter.string(from: note.safeDate)
+            content.text = folder.safeName
+            content.secondaryText = folder.safeIcon
             cell.contentConfiguration = content
         }
         
@@ -120,12 +98,9 @@ class NotesViewController: UIViewController {
     }
     
     func configFRC() {
-        let request = Note.fetchRequest()
-        if let folder = folder {
-            request.predicate = NSPredicate(format: "folder == %@", folder)
-        }
+        let request = Folder.fetchRequest()
         request.sortDescriptors = [
-            NSSortDescriptor(key: "content", ascending: false)
+            NSSortDescriptor(key: "name", ascending: false)
         ]
         
         frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
@@ -135,7 +110,7 @@ class NotesViewController: UIViewController {
     
 }
 
-extension NotesViewController: NSFetchedResultsControllerDelegate {
+extension TestViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
@@ -153,15 +128,14 @@ extension NotesViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-extension NotesViewController: UICollectionViewDelegate {
+extension TestViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let snapshot = dataSource.snapshot()
-        guard let note: Note = foo(with: snapshot.itemIdentifiers[indexPath.row]) else {
-            return
-        }
-        let vc = NoteEditorController(note: note)
-        print(note.safeID)
-        navigationController?.pushViewController(vc, animated: true)
+//        let snapshot = dataSource.snapshot()
+//        guard let note: Note = foo(with: snapshot.itemIdentifiers[indexPath.row]) else {
+//            return
+//        }
+//        let vc = NoteEditorController(note: note)
+//        print(note.safeID)
+//        navigationController?.pushViewController(vc, animated: true)
     }
 }
-
