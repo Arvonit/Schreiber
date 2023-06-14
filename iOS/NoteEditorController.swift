@@ -40,6 +40,7 @@ class NoteEditorController: UIViewController {
             dataController.delete(note)
             dataController.save()
         } else if initialContent != note.safeContent {
+            note.date = Date.now
             dataController.save()
         }
     }
@@ -51,11 +52,12 @@ class NoteEditorController: UIViewController {
     
     func configTextView() {
         editor = UITextView(frame: view.bounds)
+        view.addSubview(editor)
+        
         editor.font = .preferredFont(forTextStyle: .body)
         editor.text = note.safeContent
         editor.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         editor.delegate = self
-        view.addSubview(editor)
     }
     
 }

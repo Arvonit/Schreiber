@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if os(iOS)
 struct ViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
     let viewController: ViewController
 
@@ -22,3 +23,20 @@ struct ViewControllerPreview<ViewController: UIViewController>: UIViewController
         viewController
     }
 }
+#elseif os(macOS)
+struct ViewControllerPreview<ViewController: NSViewController>: NSViewControllerRepresentable {
+    let viewController: ViewController
+
+    init(_ builder: @escaping () -> ViewController) {
+        viewController = builder()
+    }
+    
+    // MARK: - UIViewControllerRepresentable
+    func updateNSViewController(_ nsViewController: ViewController, context: Context) {
+    }
+
+    func makeNSViewController(context: Context) -> ViewController {
+        viewController
+    }
+}
+#endif

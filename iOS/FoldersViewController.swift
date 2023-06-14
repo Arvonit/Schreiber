@@ -11,6 +11,7 @@ import CoreData
 class FoldersViewController: UIViewController {
     
     let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
+    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
     var frc: NSFetchedResultsController<Folder>!
@@ -49,7 +50,7 @@ class FoldersViewController: UIViewController {
     }
     
     func configCollectionView() {
-        var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
             
@@ -106,14 +107,14 @@ class FoldersViewController: UIViewController {
 extension FoldersViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+        let currentSnapshot = dataSource.snapshot()
 
+        // Reload data if there are changes
         let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
             guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
                 return nil
             }
             guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-            
             return itemIdentifier
         }
         snapshot.reloadItems(reloadIdentifiers)

@@ -7,10 +7,10 @@
 
 import Foundation
 import CoreData
-import UIKit
+// import UIKit
 
 class DataController {
-    private let container: NSPersistentContainer
+    let container: NSPersistentContainer
     
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "Schreiber")
@@ -35,11 +35,14 @@ class DataController {
         }
     }
     
+    // static variables are executed lazily by default
     static let preview: DataController = {
         let data = DataController(inMemory: true)
         data.createSampleData()
         return data
     }()
+    
+    static let shared = DataController()
     
     var context: NSManagedObjectContext {
         container.viewContext

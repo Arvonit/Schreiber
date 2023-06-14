@@ -11,6 +11,7 @@ import CoreData
 class NotesViewController: UIViewController {
     
     let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
+    @IBOutlet weak var tableView: NSTableView!
     let folder: Folder?
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -24,6 +25,7 @@ class NotesViewController: UIViewController {
     
     init(folder: Folder? = nil) {
         self.folder = folder
+        // self.dataController = dataController
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -38,9 +40,7 @@ class NotesViewController: UIViewController {
         configDataSource()
         configFRC()
     }
-        
-    
-    
+            
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
         if let folder = folder {
@@ -137,8 +137,9 @@ class NotesViewController: UIViewController {
 extension NotesViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+        let currentSnapshot = dataSource.snapshot()
 
+        // Reload data if there are changes
         let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
             guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
                 return nil

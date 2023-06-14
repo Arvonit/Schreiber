@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class RootViewController: UISplitViewController {
     
@@ -23,6 +24,9 @@ class RootViewController: UISplitViewController {
     }
     
     func configVC() {
+        // Blur the sidebar background on macOS
+        primaryBackgroundStyle = .sidebar
+        
         // Add lists to split view
         setViewController(FoldersViewController(), for: .primary)
         setViewController(createPlaceholderView("Select a folder"), for: .supplementary)
@@ -49,6 +53,14 @@ class RootViewController: UISplitViewController {
     
 }
 
-#Preview {
-    RootViewController()
+struct Preview: PreviewProvider {
+    static var previews: some View {
+        ViewControllerPreview {
+            RootViewController()
+        }
+    }
 }
+
+//#Preview {
+//    RootViewController()
+//}
