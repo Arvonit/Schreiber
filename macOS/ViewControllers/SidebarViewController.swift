@@ -1,19 +1,20 @@
 //
-//  NotesViewController.swift
-//  Schreiber (macOS)
+//  SidebarViewController.swift
+//  Schreiber (iOS)
 //
-//  Created by Arvind on 6/15/23.
+//  Created by Arvind on 6/14/23.
 //
 
 import Cocoa
+import SwiftUI
 
-class NotesViewController: NSViewController {
+class SidebarViewController: NSViewController {
     
     let dataController = (NSApplication.shared.delegate as! AppDelegate).controller
     
-    @IBOutlet var tableView: NSTableView!
+    @IBOutlet weak var tableView: NSTableView!
     var dataSource: NSTableViewDiffableDataSource<Int, NSManagedObjectID>!
-    var frc: NSFetchedResultsController<Note>!
+    var frc: NSFetchedResultsController<Folder>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,25 +25,29 @@ class NotesViewController: NSViewController {
     
     func configTableView() {
         // tableView.style = .inset
-        tableView.delegate = self
     }
     
     func configDataSource() {
         dataSource = NSTableViewDiffableDataSource(tableView: tableView, cellProvider: { tableView, tableColumn, row, identifier in
-            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("NoteCell"), owner: self) as! NSTableCellView
-            guard let note: Note = self.dataController.getManagedObject(id: identifier) else {
-                return cell
+            guard let folder: Folder = self.dataController.getManagedObject(id: identifier) else {
+                preconditionFailure("fuck")
             }
-            cell.textField?.stringValue = note.title
+            
+            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("FolderCell"), owner: self) as! NSTableCellView
+            cell.imageView?.image = NSImage(systemSymbolName: folder.safeIcon, accessibilityDescription: "test")
+            cell.textField?.stringValue = folder.safeName
             return cell
+        
+            // let cell = NSHostingView(rootView: Label(folder.safeName, systemImage: folder.safeIcon))
+            // return cell
         })
     }
     
     func configFRC() {
-        let request = Note.fetchRequest()
+        let request = Folder.fetchRequest()
         request.predicate = NSPredicate(value: true)
         request.sortDescriptors = [
-            NSSortDescriptor(key: "date", ascending: true)
+            NSSortDescriptor(key: "name", ascending: true)
         ]
         
         frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
@@ -52,13 +57,7 @@ class NotesViewController: NSViewController {
     
 }
 
-extension NotesViewController: NSTableViewDelegate {
-    func tableViewSelectionDidChange(_ notification: Notification) {
-        
-    }
-}
-
-extension NotesViewController: NSFetchedResultsControllerDelegate {
+extension SidebarViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot()
@@ -73,6 +72,7 @@ extension NotesViewController: NSFetchedResultsControllerDelegate {
         }
         snapshot.reloadItems(reloadIdentifiers)
 
+        // dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
     }
 }

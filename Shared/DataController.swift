@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 // import UIKit
 
-class DataController {
+class DataController: ObservableObject {
     let container: NSPersistentContainer
     
     init(inMemory: Bool = false) {
@@ -42,7 +42,7 @@ class DataController {
         return data
     }()
     
-    static let shared = DataController()
+    static let shared = preview
     
     var context: NSManagedObjectContext {
         container.viewContext
@@ -135,6 +135,14 @@ class DataController {
         for i in 0..<3 {
             let _ = Note(content: notes[i], folder: folders[i], context: context)
         }
+        
+        for i in 3..<5 {
+            let _ = Note(content: notes[i], context: context)
+        }
+        
+        // for _ in 0..<10 {
+        //     let _ = Note(content: notes[4], context: context)
+        // }
         
         // Attempt to save sample data to the managed object context
         do {

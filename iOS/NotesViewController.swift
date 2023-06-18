@@ -11,7 +11,6 @@ import CoreData
 class NotesViewController: UIViewController {
     
     let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
-    @IBOutlet weak var tableView: NSTableView!
     let folder: Folder?
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

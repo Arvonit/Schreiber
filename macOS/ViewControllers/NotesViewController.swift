@@ -1,19 +1,20 @@
 //
-//  SidebarViewController.swift
-//  Schreiber (iOS)
+//  NotesViewController.swift
+//  Schreiber (macOS)
 //
-//  Created by Arvind on 6/14/23.
+//  Created by Arvind on 6/15/23.
 //
 
 import Cocoa
+import SwiftUI
 
-class SidebarViewController: NSViewController {
+class NotesViewController: NSViewController {
     
     let dataController = (NSApplication.shared.delegate as! AppDelegate).controller
     
     @IBOutlet weak var tableView: NSTableView!
     var dataSource: NSTableViewDiffableDataSource<Int, NSManagedObjectID>!
-    var frc: NSFetchedResultsController<Folder>!
+    var frc: NSFetchedResultsController<Note>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,26 +24,35 @@ class SidebarViewController: NSViewController {
     }
     
     func configTableView() {
-        // tableView.style = .inset
+        tableView.delegate = self
     }
     
     func configDataSource() {
         dataSource = NSTableViewDiffableDataSource(tableView: tableView, cellProvider: { tableView, tableColumn, row, identifier in
-            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("FolderCell"), owner: self) as! NSTableCellView
-            guard let folder: Folder = self.dataController.getManagedObject(id: identifier) else {
-                return cell
+            guard let note: Note = self.dataController.getManagedObject(id: identifier) else {
+                preconditionFailure("fuck")
             }
-            cell.imageView?.image = NSImage(systemSymbolName: folder.safeIcon, accessibilityDescription: nil)
-            cell.textField?.stringValue = folder.safeName
+            
+            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("NoteCell"), owner: self) as! NSTableCellView
+            cell.textField?.stringValue = note.title
             return cell
+            
+            // var content = cell.defaultContentConfiguration()
+            // content.text = note.title
+            // cell.contentConfiguration = content
+            // return cell
+            
+            // let cell = NSHostingView(rootView: NoteCellView(note: note).padding(EdgeInsets.init(top: 6, leading: 0, bottom: 6, trailing: 0)))
+            // cell.translatesAutoresizingMaskIntoConstraints = false
+            // return cell
         })
     }
     
     func configFRC() {
-        let request = Folder.fetchRequest()
+        let request = Note.fetchRequest()
         request.predicate = NSPredicate(value: true)
         request.sortDescriptors = [
-            NSSortDescriptor(key: "name", ascending: true)
+            NSSortDescriptor(key: "date", ascending: true)
         ]
         
         frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
@@ -52,7 +62,13 @@ class SidebarViewController: NSViewController {
     
 }
 
-extension SidebarViewController: NSFetchedResultsControllerDelegate {
+extension NotesViewController: NSTableViewDelegate {
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        
+    }
+}
+
+extension NotesViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot()
@@ -67,7 +83,6 @@ extension SidebarViewController: NSFetchedResultsControllerDelegate {
         }
         snapshot.reloadItems(reloadIdentifiers)
 
-        // dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
     }
 }

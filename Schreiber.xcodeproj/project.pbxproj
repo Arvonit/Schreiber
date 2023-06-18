@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4003D852A3EC17700D3DC8E /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4003D842A3EC17700D3DC8E /* MainWindowController.swift */; };
+		A4003D8D2A3F706900D3DC8E /* NoteCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4003D8C2A3F706900D3DC8E /* NoteCellView.swift */; };
+		A4003D8E2A3F706900D3DC8E /* NoteCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4003D8C2A3F706900D3DC8E /* NoteCellView.swift */; };
+		A4003D932A3FA38900D3DC8E /* SidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4003D922A3FA38900D3DC8E /* SidebarView.xib */; };
+		A4003D952A3FA4D000D3DC8E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4003D942A3FA4D000D3DC8E /* MainViewController.swift */; };
 		A40A83E32A3A80A300259015 /* ViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40A83E22A3A80A300259015 /* ViewPreview.swift */; };
 		A40A83E42A3A80A300259015 /* ViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40A83E22A3A80A300259015 /* ViewPreview.swift */; };
 		A41B87172A3A76DE000415AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87162A3A76DE000415AD /* AppDelegate.swift */; };
@@ -20,14 +25,18 @@
 		A41B87482A3A7D47000415AD /* ViewControllerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */; };
 		A41B87492A3A7E1C000415AD /* ViewControllerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */; };
 		A41B874C2A3AAA7B000415AD /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */; };
-		A489CBEC2A3BEA6900A26715 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A489CBEB2A3BEA6900A26715 /* NoteEditorController.swift */; };
+		A422B73E2A44FED1000BB5F7 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A422B73C2A44FED1000BB5F7 /* SidebarView.swift */; };
+		A4540BD52A472BFB00A656FB /* NotesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4003D962A3FA58500D3DC8E /* NotesView.xib */; };
+		A45580F02A4517E700EAE94F /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45580EE2A4517E700EAE94F /* NotesView.swift */; };
+		A489CBEC2A3BEA6900A26715 /* NoteEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A489CBEB2A3BEA6900A26715 /* NoteEditorViewController.swift */; };
+		A49FD8392A3FB0DE00F47139 /* NoteEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A49FD8382A3FB0DE00F47139 /* NoteEditorView.xib */; };
 		A4B12DF32A3BE3E1002F4E2C /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B12DF22A3BE3E1002F4E2C /* NotesViewController.swift */; };
 		A4E465162A35634900DD8B86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465152A35634900DD8B86 /* AppDelegate.swift */; };
 		A4E465182A35634900DD8B86 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465172A35634900DD8B86 /* SceneDelegate.swift */; };
 		A4E465202A35634900DD8B86 /* Schreiber.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A4E4651E2A35634900DD8B86 /* Schreiber.xcdatamodeld */; };
 		A4E465222A35634A00DD8B86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4E465212A35634A00DD8B86 /* Assets.xcassets */; };
 		A4E465252A35634A00DD8B86 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4E465232A35634A00DD8B86 /* LaunchScreen.storyboard */; };
-		A4E4652D2A3569CA00DD8B86 /* FoldersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E4652C2A3569CA00DD8B86 /* FoldersViewController.swift */; };
+		A4E4652D2A3569CA00DD8B86 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E4652C2A3569CA00DD8B86 /* SidebarViewController.swift */; };
 		A4E4652F2A356F1200DD8B86 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */; };
 		A4E465312A3573F400DD8B86 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465302A3573F400DD8B86 /* NoteEditorController.swift */; };
 		A4E465352A357F1800DD8B86 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465342A357F1800DD8B86 /* DataController.swift */; };
@@ -37,6 +46,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A4003D842A3EC17700D3DC8E /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		A4003D8C2A3F706900D3DC8E /* NoteCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCellView.swift; sourceTree = "<group>"; };
+		A4003D922A3FA38900D3DC8E /* SidebarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SidebarView.xib; sourceTree = "<group>"; };
+		A4003D942A3FA4D000D3DC8E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A4003D962A3FA58500D3DC8E /* NotesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotesView.xib; sourceTree = "<group>"; };
 		A40A83E22A3A80A300259015 /* ViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPreview.swift; sourceTree = "<group>"; };
 		A41B87142A3A76DE000415AD /* Schreiber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schreiber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A41B87162A3A76DE000415AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -46,7 +60,10 @@
 		A41B87222A3A76DF000415AD /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPreview.swift; sourceTree = "<group>"; };
 		A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
-		A489CBEB2A3BEA6900A26715 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
+		A422B73C2A44FED1000BB5F7 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		A45580EE2A4517E700EAE94F /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
+		A489CBEB2A3BEA6900A26715 /* NoteEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorViewController.swift; sourceTree = "<group>"; };
+		A49FD8382A3FB0DE00F47139 /* NoteEditorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoteEditorView.xib; sourceTree = "<group>"; };
 		A4B12DF22A3BE3E1002F4E2C /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		A4D4816C2A3918F300A96721 /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		A4E465122A35634900DD8B86 /* Schreiber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schreiber.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,7 +73,7 @@
 		A4E465212A35634A00DD8B86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A4E465242A35634A00DD8B86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A4E465262A35634A00DD8B86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A4E4652C2A3569CA00DD8B86 /* FoldersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersViewController.swift; sourceTree = "<group>"; };
+		A4E4652C2A3569CA00DD8B86 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		A4E465302A3573F400DD8B86 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
 		A4E465342A357F1800DD8B86 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -86,14 +103,14 @@
 		A41B87152A3A76DE000415AD /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				A4540BD62A472C5900A656FB /* Views */,
+				A4540BD42A472BAC00A656FB /* ViewControllers */,
 				A41B87162A3A76DE000415AD /* AppDelegate.swift */,
 				A41B87182A3A76DE000415AD /* ViewController.swift */,
-				A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */,
-				A4B12DF22A3BE3E1002F4E2C /* NotesViewController.swift */,
+				A4003D842A3EC17700D3DC8E /* MainWindowController.swift */,
 				A41B871D2A3A76DF000415AD /* Assets.xcassets */,
 				A41B871F2A3A76DF000415AD /* Main.storyboard */,
 				A41B87222A3A76DF000415AD /* macOS.entitlements */,
-				A489CBEB2A3BEA6900A26715 /* NoteEditorController.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -107,8 +124,43 @@
 				A4E465362A357F6200DD8B86 /* Models.swift */,
 				A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */,
 				A40A83E22A3A80A300259015 /* ViewPreview.swift */,
+				A4003D8C2A3F706900D3DC8E /* NoteCellView.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		A4540BD42A472BAC00A656FB /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A4003D942A3FA4D000D3DC8E /* MainViewController.swift */,
+				A4003D922A3FA38900D3DC8E /* SidebarView.xib */,
+				A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */,
+				A4003D962A3FA58500D3DC8E /* NotesView.xib */,
+				A4B12DF22A3BE3E1002F4E2C /* NotesViewController.swift */,
+				A49FD8382A3FB0DE00F47139 /* NoteEditorView.xib */,
+				A489CBEB2A3BEA6900A26715 /* NoteEditorViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		A4540BD62A472C5900A656FB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A422B73C2A44FED1000BB5F7 /* SidebarView.swift */,
+				A45580EE2A4517E700EAE94F /* NotesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A4ACA3B62A411BBB00460FD9 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A4E4653A2A36018E00DD8B86 /* RootViewController.swift */,
+				A4E4652C2A3569CA00DD8B86 /* SidebarViewController.swift */,
+				A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */,
+				A4E465302A3573F400DD8B86 /* NoteEditorController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		A4E465092A35634900DD8B86 = {
@@ -133,16 +185,13 @@
 		A4E465142A35634900DD8B86 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				A4D4816C2A3918F300A96721 /* iOS.entitlements */,
+				A4ACA3B62A411BBB00460FD9 /* ViewControllers */,
 				A4E465152A35634900DD8B86 /* AppDelegate.swift */,
 				A4E465172A35634900DD8B86 /* SceneDelegate.swift */,
-				A4E465212A35634A00DD8B86 /* Assets.xcassets */,
+				A4D4816C2A3918F300A96721 /* iOS.entitlements */,
 				A4E465232A35634A00DD8B86 /* LaunchScreen.storyboard */,
+				A4E465212A35634A00DD8B86 /* Assets.xcassets */,
 				A4E465262A35634A00DD8B86 /* Info.plist */,
-				A4E4653A2A36018E00DD8B86 /* RootViewController.swift */,
-				A4E4652C2A3569CA00DD8B86 /* FoldersViewController.swift */,
-				A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */,
-				A4E465302A3573F400DD8B86 /* NoteEditorController.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -163,6 +212,8 @@
 			dependencies = (
 			);
 			name = "Schreiber (macOS)";
+			packageProductDependencies = (
+			);
 			productName = Schreiber;
 			productReference = A41B87142A3A76DE000415AD /* Schreiber.app */;
 			productType = "com.apple.product-type.application";
@@ -211,6 +262,8 @@
 				Base,
 			);
 			mainGroup = A4E465092A35634900DD8B86;
+			packageReferences = (
+			);
 			productRefGroup = A4E465132A35634900DD8B86 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -226,8 +279,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4540BD52A472BFB00A656FB /* NotesView.xib in Resources */,
 				A41B871E2A3A76DF000415AD /* Assets.xcassets in Resources */,
 				A41B87212A3A76DF000415AD /* Main.storyboard in Resources */,
+				A4003D932A3FA38900D3DC8E /* SidebarView.xib in Resources */,
+				A49FD8392A3FB0DE00F47139 /* NoteEditorView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,15 +304,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				A41B87482A3A7D47000415AD /* ViewControllerPreview.swift in Sources */,
+				A4003D8E2A3F706900D3DC8E /* NoteCellView.swift in Sources */,
 				A40A83E42A3A80A300259015 /* ViewPreview.swift in Sources */,
+				A4003D852A3EC17700D3DC8E /* MainWindowController.swift in Sources */,
 				A41B87452A3A7BFF000415AD /* NSManagedObjectContext+Helpers.swift in Sources */,
 				A41B87432A3A7BFA000415AD /* Schreiber.xcdatamodeld in Sources */,
 				A41B87442A3A7BFC000415AD /* DataController.swift in Sources */,
+				A4003D952A3FA4D000D3DC8E /* MainViewController.swift in Sources */,
 				A41B87462A3A7C02000415AD /* Models.swift in Sources */,
 				A4B12DF32A3BE3E1002F4E2C /* NotesViewController.swift in Sources */,
+				A45580F02A4517E700EAE94F /* NotesView.swift in Sources */,
 				A41B87192A3A76DE000415AD /* ViewController.swift in Sources */,
 				A41B874C2A3AAA7B000415AD /* SidebarViewController.swift in Sources */,
-				A489CBEC2A3BEA6900A26715 /* NoteEditorController.swift in Sources */,
+				A422B73E2A44FED1000BB5F7 /* SidebarView.swift in Sources */,
+				A489CBEC2A3BEA6900A26715 /* NoteEditorViewController.swift in Sources */,
 				A41B87172A3A76DE000415AD /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,7 +327,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4E465312A3573F400DD8B86 /* NoteEditorController.swift in Sources */,
-				A4E4652D2A3569CA00DD8B86 /* FoldersViewController.swift in Sources */,
+				A4003D8D2A3F706900D3DC8E /* NoteCellView.swift in Sources */,
+				A4E4652D2A3569CA00DD8B86 /* SidebarViewController.swift in Sources */,
 				A4E4652F2A356F1200DD8B86 /* NotesViewController.swift in Sources */,
 				A4E465202A35634900DD8B86 /* Schreiber.xcdatamodeld in Sources */,
 				A4E465162A35634900DD8B86 /* AppDelegate.swift in Sources */,
@@ -323,7 +385,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.arvonit.Schreiber;
 				PRODUCT_NAME = Schreiber;
@@ -355,7 +417,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.arvonit.Schreiber;
 				PRODUCT_NAME = Schreiber;
@@ -511,6 +573,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6";
@@ -543,6 +606,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6";

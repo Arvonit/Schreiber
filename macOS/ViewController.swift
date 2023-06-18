@@ -12,8 +12,6 @@ class ViewController: NSSplitViewController {
 
     override func viewWillAppear() {
         super.viewWillAppear()
-        // sidebarItem.viewController = NSViewController()
-        
     }
 
     override func viewDidLoad() {
@@ -29,12 +27,4 @@ class ViewController: NSSplitViewController {
     }
 
 
-}
-
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            ViewController()
-        }
-    }
 }
