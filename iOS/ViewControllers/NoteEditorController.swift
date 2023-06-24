@@ -11,7 +11,7 @@ class NoteEditorController: UIViewController {
     
     let note: Note
     let initialContent: String
-    let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
+    var dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     
     var editor: UITextView!
     
@@ -52,6 +52,7 @@ class NoteEditorController: UIViewController {
     
     func configTextView() {
         editor = UITextView(frame: view.bounds)
+        editor.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         view.addSubview(editor)
         
         editor.font = .preferredFont(forTextStyle: .body)

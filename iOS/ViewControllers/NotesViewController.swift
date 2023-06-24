@@ -1,5 +1,5 @@
 //
-//  FoldersViewController.swift
+//  NotesViewController.swift
 //  Schreiber
 //
 //  Created by Arvind on 6/10/23.
@@ -7,14 +7,38 @@
 
 import UIKit
 import CoreData
+import SwiftUI
 
-class FoldersViewController: UIViewController {
+class NotesViewController: UIViewController {
     
-    let dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
+    var dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
+    let folder: Folder?
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM d, yyyy h:mm a"
+        return formatter
+    }()
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
-    var frc: NSFetchedResultsController<Folder>!
+    var frc: NSFetchedResultsController<Note>!
+    
+    init(folder: Folder? = nil) {
+        self.folder = folder
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    var isCompact: Bool {
+        if let splitViewController = splitViewController {
+            return splitViewController.isCollapsed
+        } else {
+            return false
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,65 +47,82 @@ class FoldersViewController: UIViewController {
         configDataSource()
         configFRC()
     }
-    
+            
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Schreiber"
+        if let folder = folder {
+            title = folder.safeName
+        } else {
+            title = "All Notes"
+        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
-            action: #selector(addNewFolder)
+            action: #selector(addNewNote)
         )
     }
     
-    @objc func addNewFolder() {
-        let alert = UIAlertController(title: "Add new folder", message: nil, preferredStyle: .alert)
-        alert.addTextField { textField in
-            textField.placeholder = "Name"
-        }
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak alert] _ in
-            guard let name = alert?.textFields?.first?.text else { return }
-            let _ = Folder(name: name, context: self.dataController.context)
-            self.dataController.save()
-        })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
+    @objc func addNewNote() {
+        let newNote = Note(folder: folder, context: dataController.context)
+        dataController.save()
         
-        present(alert, animated: true)
+        var indexPath: IndexPath? = nil
+        
+        if let index = dataSource.snapshot().indexOfItem(newNote.objectID) {
+            indexPath = IndexPath(row: index, section: 0)
+            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+        }
+        
+        let vc = NoteEditorController(note: newNote)
+        
+        if isCompact {
+            if let indexPath = indexPath {
+                collectionView.deselectItem(at: indexPath, animated: true)
+            }
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            splitViewController?.setViewController(nil, for: .secondary)
+            splitViewController?.setViewController(vc, for: .secondary)
+        }
     }
     
     func configCollectionView() {
-        var configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
+        var configuration = UICollectionLayoutListConfiguration(appearance: isCompact ? .insetGrouped : .sidebarPlain)
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
-            
-            print(dataSource.snapshot().itemIdentifiers[indexPath.row].isTemporaryID)
-            guard let folder: Folder = dataController.getManagedObject(id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else {
-                return nil
-            }
+            guard let note: Note = dataController.getManagedObject(
+                id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
             
             let del = UIContextualAction(style: .destructive, title: "Delete") {
                 action, view, completion in
-                self.dataController.delete(folder)
+                self.dataController.delete(note)
                 completion(true)
             }
             return UISwipeActionsConfiguration(actions: [del])
         }
+        
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         collectionView.delegate = self
+        
         view.addSubview(collectionView)
     }
-        
+    
     func configDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
-            var content = cell.defaultContentConfiguration()
-            guard let folder: Folder = self.dataController.getManagedObject(id: item) else {
+            guard let note: Note = self.dataController.getManagedObject(id: item) else {
                 return
             }
-            content.text = folder.safeName
-            content.image = UIImage(systemName: folder.safeIcon)
+                        
+            var content = cell.defaultContentConfiguration()
+            content.text = note.title
+            content.secondaryText = self.dateFormatter.string(from: note.safeDate)
             cell.contentConfiguration = content
+            
+            // cell.contentConfiguration = UIHostingConfiguration {
+            //     NoteCellView(note: note)
+            // }
         }
         
         dataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) {
@@ -92,19 +133,22 @@ class FoldersViewController: UIViewController {
     }
     
     func configFRC() {
-        let request = Folder.fetchRequest()
-        request.predicate = NSPredicate(value: true)
+        let request = Note.fetchRequest()
+        if let folder = folder {
+            request.predicate = NSPredicate(format: "folder == %@", folder)
+        }
         request.sortDescriptors = [
-            NSSortDescriptor(key: "name", ascending: true)
+            NSSortDescriptor(key: "content", ascending: false)
         ]
         
         frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
         frc.delegate = self
         try! frc.performFetch()
     }
+    
 }
 
-extension FoldersViewController: NSFetchedResultsControllerDelegate {
+extension NotesViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot()
@@ -123,19 +167,21 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-extension FoldersViewController: UICollectionViewDelegate {
+extension NotesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
-        guard let folder: Folder = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
+        guard let note: Note = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
             return
         }
-        let vc = NotesViewController(folder: folder)
+        let vc = NoteEditorController(note: note)
         
-        if splitViewController!.isCollapsed {
+        if isCompact {
             collectionView.deselectItem(at: indexPath, animated: true)
             navigationController?.pushViewController(vc, animated: true)
         } else {
-            splitViewController?.setViewController(vc, for: .supplementary)
+            splitViewController?.setViewController(nil, for: .secondary)
+            splitViewController?.setViewController(vc, for: .secondary)
         }
     }
 }
+

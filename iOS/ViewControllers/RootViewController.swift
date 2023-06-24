@@ -28,12 +28,12 @@ class RootViewController: UISplitViewController {
         primaryBackgroundStyle = .sidebar
         
         // Add lists to split view
-        setViewController(FoldersViewController(), for: .primary)
+        setViewController(SidebarViewController(), for: .primary)
         setViewController(createPlaceholderView("Select a folder"), for: .supplementary)
         setViewController(createPlaceholderView("Select a note"), for: .secondary)
         
         // Make folders view top of navigation stack for iPhone
-        setViewController(UINavigationController(rootViewController: FoldersViewController()), for: .compact)
+        setViewController(UINavigationController(rootViewController: SidebarViewController()), for: .compact)
     }
     
     func createPlaceholderView(_ text: String) -> UIViewController {
