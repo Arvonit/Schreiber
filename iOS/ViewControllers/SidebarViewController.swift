@@ -14,25 +14,26 @@ class SidebarViewController: UIViewController {
     var dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
     
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
+    var dataSource: UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>!
     var frc: NSFetchedResultsController<Folder>!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configVC()
         configCollectionView()
         configDataSource()
+        configSupplementaryViews()
         configFRC()
     }
-    
+
     var isCompact: Bool {
         if let splitViewController = splitViewController {
             return splitViewController.isCollapsed
         } else {
-            return false
+            return true
         }
     }
-    
+
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "Schreiber"
@@ -54,102 +55,208 @@ class SidebarViewController: UIViewController {
             self.dataController.save()
         })
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
-        
+
         present(alert, animated: true)
     }
-    
+
     func configCollectionView() {
-        var configuration = UICollectionLayoutListConfiguration(appearance: isCompact ? .insetGrouped : .sidebar)
-        configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
-            guard let self = self else { return nil }
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            guard let sectionKind = SidebarSection(rawValue: sectionIndex) else { return nil }
+            var configuration = UICollectionLayoutListConfiguration(appearance: self.isCompact ? .insetGrouped : .sidebar)
             
-            let id = self.dataSource.snapshot().itemIdentifiers[indexPath.row]
-            guard let folder: Folder = dataController.getManagedObject(id: id) else {
-                return nil
+            switch sectionKind {
+            case .groups:
+                configuration.headerMode = .none
+            case .folders:
+                configuration.headerMode = .supplementary
+                configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+                    guard let self = self else { return nil }
+
+                    let snapshot = self.dataSource.snapshot()
+                    guard case .folder(let folderID) = snapshot.itemIdentifiers(inSection: .folders)[indexPath.row],
+                          let folder: Folder = dataController.getManagedObject(id: folderID)
+                    else { return nil }
+
+                    let del = UIContextualAction(style: .destructive, title: "Delete") {
+                        action, view, completion in
+                        self.dataController.delete(folder)
+                        self.dataController.save()
+                        completion(true)
+                    }
+                    return UISwipeActionsConfiguration(actions: [del])
+                }
             }
-            
-            let del = UIContextualAction(style: .destructive, title: "Delete") {
-                action, view, completion in
-                self.dataController.delete(folder)
-                completion(true)
-            }
-            return UISwipeActionsConfiguration(actions: [del])
+
+            return NSCollectionLayoutSection.list(
+                using: configuration,
+                layoutEnvironment: layoutEnvironment
+            )
         }
-        
-        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         collectionView.delegate = self
         view.addSubview(collectionView)
     }
-    
+
     func configDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
-            guard let folder: Folder = self.dataController.getManagedObject(id: item) else {
-                return
-            }
-            
+        let groupCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NoteGroup> { (cell, indexPath, item) in
+            var content = cell.defaultContentConfiguration()
+            content.text = item.name
+            content.image = UIImage(systemName: item.icon)
+            cell.contentConfiguration = content
+        }
+        
+        let folderCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
+            guard let folder: Folder = self.dataController.getManagedObject(id: item) else { return }
+
             var content = cell.defaultContentConfiguration()
             content.text = folder.safeName
             content.image = UIImage(systemName: folder.safeIcon)
             cell.contentConfiguration = content
-            
-            // cell.contentConfiguration = UIHostingConfiguration {
-            //     Label(folder.safeName, systemImage: folder.safeIcon)
-            // }
         }
-        
-        dataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: NSManagedObjectID) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+
+        dataSource = UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>(collectionView: collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, item: SidebarItem) -> UICollectionViewCell? in
+            switch item {
+            case .group(let noteGroup):
+                return collectionView.dequeueConfiguredReusableCell(using: groupCellRegistration, for: indexPath, item: noteGroup)
+            case .folder(let folderID):
+                return collectionView.dequeueConfiguredReusableCell(using: folderCellRegistration, for: indexPath, item: folderID)
+            }
         }
     }
     
+    func configSupplementaryViews() {
+        let headerCellRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(
+            elementKind: UICollectionView.elementKindSectionHeader
+        ) { supplementaryView, elementKind, indexPath in
+            // Make sure section is Folders
+            guard let sectionKind = SidebarSection(rawValue: indexPath.section),
+                  case .folders = sectionKind else { return }
+            
+            var content = UIListContentConfiguration.sidebarHeader()
+            content.text = "Folders"
+            supplementaryView.contentConfiguration = content
+        }
+        
+        dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+            if elementKind == UICollectionView.elementKindSectionHeader {
+                return collectionView.dequeueConfiguredReusableSupplementary(
+                    using: headerCellRegistration,
+                    for: indexPath
+                )
+            }
+            return nil
+        }
+    }
+        
     func configFRC() {
         let request = Folder.fetchRequest()
         request.predicate = NSPredicate(value: true)
         request.sortDescriptors = [
             NSSortDescriptor(key: "name", ascending: true)
         ]
-        
-        frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
+
+        frc = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: dataController.context,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
         frc.delegate = self
         try! frc.performFetch()
     }
 }
 
 extension SidebarViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = dataSource.snapshot()
-        
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference
+    ) {
+        var coreDataSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
+        var snapshot = dataSource.snapshot() // Start with current snapshot
+
         // Reload data if there are changes
-        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+        let reloadIdentifiers: [NSManagedObjectID] = coreDataSnapshot.itemIdentifiers.compactMap { itemIdentifier in
+            // Index of folder in current snapshot
+            let currentIndex: Int?
+            if snapshot.sectionIdentifiers.isEmpty {
+                currentIndex = snapshot.indexOfItem(.folder(itemIdentifier))
+            } else {
+                currentIndex = snapshot.itemIdentifiers(inSection: .folders).firstIndex(of: .folder(itemIdentifier))
+            }
+            
+            // Index of folder in core data snapshot
+            let index = coreDataSnapshot.indexOfItem(itemIdentifier)
+            
+            
+            // print("currentIndex: " + (currentIndex != nil ? "\(currentIndex!)" : "nil"))
+            // print("index: " + (index != nil ? "\(index!)" : "nil"))
+            
+            guard let currentIndex = currentIndex, let index = index, index == currentIndex else {
                 return nil
             }
             guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
             return itemIdentifier
         }
-        snapshot.reloadItems(reloadIdentifiers)
+        coreDataSnapshot.reloadItems(reloadIdentifiers)
+    
+        // If it's the first fetch, add groups as well
+        if snapshot.sectionIdentifiers.isEmpty {
+            let groups = [NoteGroup.allNotes, NoteGroup.trash]
+            snapshot.appendSections(SidebarSection.allCases)
+            snapshot.appendItems(groups.map { SidebarItem.group($0) }, toSection: .groups)
+        }
         
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
+        // Delete all folders and add them again from the Core Data snapshot
+        snapshot.deleteSections([.folders])
+        snapshot.appendSections([.folders])
+        snapshot.appendItems(coreDataSnapshot.itemIdentifiers.map { .folder($0) }, toSection: .folders)
+
+        // Apply changes
+        dataSource.apply(snapshot, animatingDifferences: collectionView.numberOfSections != 0)
+        print()
     }
+    
+
 }
 
 extension SidebarViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let section = SidebarSection(rawValue: indexPath.section) else { return }
         let snapshot = dataSource.snapshot()
-        guard let folder: Folder = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
-            return
+
+        let vc: UIViewController
+        switch section {
+        case .groups:
+            guard case .group(let noteGroup) = snapshot.itemIdentifiers(inSection: .groups)[indexPath.row] else { return }
+            
+            if noteGroup == .allNotes {
+                vc = NotesViewController()
+            } else {
+                vc = TrashViewController()
+            }
+            
+        case .folders:
+            guard case .folder(let folderID) = snapshot.itemIdentifiers(inSection: .folders)[indexPath.row],
+                  let folder: Folder = dataController.getManagedObject(id: folderID) else { return }
+            vc = NotesViewController(folder: folder)
         }
-        let vc = NotesViewController(folder: folder)
-        
+
         if isCompact {
             collectionView.deselectItem(at: indexPath, animated: true)
             navigationController?.pushViewController(vc, animated: true)
         } else {
             splitViewController?.setViewController(vc, for: .supplementary)
+        }
+    }
+}
+
+struct SidebarViewPreviews: PreviewProvider {
+    static var previews: some View {
+        ViewControllerPreview {
+            UINavigationController(rootViewController: SidebarViewController())
         }
     }
 }

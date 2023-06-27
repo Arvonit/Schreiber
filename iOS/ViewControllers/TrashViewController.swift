@@ -1,18 +1,17 @@
 //
-//  NotesViewController.swift
-//  Schreiber
+//  TrashViewController.swift
+//  Schreiber (iOS)
 //
-//  Created by Arvind on 6/10/23.
+//  Created by Arvind on 6/27/23.
 //
 
 import UIKit
 import CoreData
 import SwiftUI
 
-class NotesViewController: UIViewController {
+class TrashViewController: UIViewController {
     
     var dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
-    let folder: Folder?
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM d, yyyy h:mm a"
@@ -22,15 +21,6 @@ class NotesViewController: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
     var frc: NSFetchedResultsController<Note>!
-    
-    init(folder: Folder? = nil) {
-        self.folder = folder
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     var isCompact: Bool {
         if let splitViewController = splitViewController {
@@ -50,44 +40,13 @@ class NotesViewController: UIViewController {
             
     func configVC() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        if let folder = folder {
-            title = folder.safeName
-        } else {
-            title = "All Notes"
-        }
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .add,
-            target: self,
-            action: #selector(addNewNote)
-        )
-    }
-    
-    @objc func addNewNote() {
-        let newNote = Note(folder: folder, context: dataController.context)
-        dataController.save()
-        
-        var indexPath: IndexPath? = nil
-        
-        if let index = dataSource.snapshot().indexOfItem(newNote.objectID) {
-            indexPath = IndexPath(row: index, section: 0)
-            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
-        }
-        
-        let vc = NoteEditorController(note: newNote)
-        
-        if isCompact {
-            if let indexPath = indexPath {
-                collectionView.deselectItem(at: indexPath, animated: true)
-            }
-            navigationController?.pushViewController(vc, animated: true)
-        } else {
-            splitViewController?.setViewController(nil, for: .secondary)
-            splitViewController?.setViewController(vc, for: .secondary)
-        }
+        title = "Trash"
     }
     
     func configCollectionView() {
         var configuration = UICollectionLayoutListConfiguration(appearance: isCompact ? .insetGrouped : .sidebarPlain)
+        
+        // Delete swipe action
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
             guard let note: Note = dataController.getManagedObject(
@@ -95,15 +54,33 @@ class NotesViewController: UIViewController {
             
             let del = UIContextualAction(style: .destructive, title: "Delete") {
                 action, view, completion in
-                // Move note to trash
-                note.inTrash = true
+                self.dataController.delete(note)
                 self.dataController.save()
-                
+
                 completion(true)
             }
             del.image = UIImage(systemName: "trash.fill")
             
             return UISwipeActionsConfiguration(actions: [del])
+        }
+        
+        // Restore swipe action
+        configuration.leadingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+            guard let self = self else { return nil }
+            guard let note: Note = dataController.getManagedObject(
+                id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
+            
+            let restore = UIContextualAction(style: .destructive, title: "Restore") {
+                action, view, completion in
+                note.inTrash = false
+                self.dataController.save()
+
+                completion(true)
+            }
+            restore.image = UIImage(systemName: "folder.fill")
+            restore.backgroundColor = UIColor(Color.purple)
+
+            return UISwipeActionsConfiguration(actions: [restore])
         }
         
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
@@ -124,10 +101,6 @@ class NotesViewController: UIViewController {
             content.text = note.title
             content.secondaryText = self.dateFormatter.string(from: note.safeDate)
             cell.contentConfiguration = content
-            
-            // cell.contentConfiguration = UIHostingConfiguration {
-            //     NoteCellView(note: note)
-            // }
         }
         
         dataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) {
@@ -139,11 +112,7 @@ class NotesViewController: UIViewController {
     
     func configFRC() {
         let request = Note.fetchRequest()
-        if let folder = folder {
-            request.predicate = NSPredicate(format: "inTrash == false and folder == %@", folder)
-        } else {
-            request.predicate = NSPredicate(format: "inTrash == false")
-        }
+        request.predicate = NSPredicate(format: "inTrash == true")
         request.sortDescriptors = [
             NSSortDescriptor(key: "date", ascending: false)
         ]
@@ -155,7 +124,7 @@ class NotesViewController: UIViewController {
     
 }
 
-extension NotesViewController: NSFetchedResultsControllerDelegate {
+extension TrashViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot()
@@ -174,13 +143,16 @@ extension NotesViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-extension NotesViewController: UICollectionViewDelegate {
+extension TrashViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let snapshot = dataSource.snapshot()
         guard let note: Note = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
             return
         }
         let vc = NoteEditorController(note: note)
+        
+        // Cannot edit notes in trash
+        // vc.editor.isEditable = false
         
         if isCompact {
             collectionView.deselectItem(at: indexPath, animated: true)
@@ -192,10 +164,10 @@ extension NotesViewController: UICollectionViewDelegate {
     }
 }
 
-struct NotesViewPreviews: PreviewProvider {
+struct TrashViewPreviews: PreviewProvider {
     static var previews: some View {
         ViewControllerPreview {
-            UINavigationController(rootViewController: NotesViewController())
+            UINavigationController(rootViewController: TrashViewController())
         }
     }
 }

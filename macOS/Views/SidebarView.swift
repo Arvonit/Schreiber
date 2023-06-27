@@ -10,18 +10,24 @@ import SwiftUI
 struct SidebarView: View {
     // @Environment(\.managedObjectContext) var context: NSManagedObjectContext
     @FetchRequest(sortDescriptors: [SortDescriptor<Folder>(\.name)]) private var folders
-    @State var selectedFolder: UUID? = nil
-    var labels = [MenuItem(name: "All Notes", image: "tray.full")]
+    // @State var selectedFolder: UUID? = nil
+    @State var selectedItem: ListItem? = nil
+    var labels = [
+        MenuItem(name: "All Notes", image: "tray.full"),
+        MenuItem(name: "Trash", image: "trash")
+    ]
 
     var body: some View {
-        List(selection: $selectedFolder) {
-            ForEach(labels, id: \.id) { label in
+        List(selection: $selectedItem) {
+            ForEach(labels) { label in
                 Label(label.name, systemImage: label.image)
+                    .tag(ListItem.item(label))
             }
             
             Section(header: Text("Folders")) {
-                ForEach(folders, id: \.safeID) { folder in
+                ForEach(folders) { folder in
                     Label(folder.safeName, systemImage: folder.safeIcon)
+                        .tag(ListItem.folder(folder))
                 }
             }
         }
@@ -35,4 +41,15 @@ struct SidebarViewPreviews: PreviewProvider {
         SidebarView()
             .environment(\.managedObjectContext, DataController.preview.context)
     }
+}
+
+struct MenuItem: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let image: String
+}
+
+enum ListItem: Hashable {
+    case folder(Folder)
+    case item(MenuItem)
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class NoteEditorController: UIViewController {
     
@@ -47,7 +48,10 @@ class NoteEditorController: UIViewController {
     
     func configVC() {
         navigationItem.largeTitleDisplayMode = .never
+        
+        #if !targetEnvironment(macCatalyst)
         title = note.title
+        #endif
     }
     
     func configTextView() {
@@ -68,6 +72,19 @@ extension NoteEditorController: UITextViewDelegate {
         // Update content of note object when text is edited
         // Also update the title of the view
         note.safeContent = textView.text
+        
+        #if !targetEnvironment(macCatalyst)
         title = note.title
+        #endif
+    }
+}
+
+struct NoteEditorPreviews: PreviewProvider {
+    static let exampleNote = Note(content: "Example note", context: DataController.preview.context)
+    
+    static var previews: some View {
+        ViewControllerPreview {
+            UINavigationController(rootViewController: NoteEditorController(note: exampleNote))
+        }
     }
 }

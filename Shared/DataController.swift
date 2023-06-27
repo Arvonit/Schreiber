@@ -136,13 +136,8 @@ class DataController: ObservableObject {
             let _ = Note(content: notes[i], folder: folders[i], context: context)
         }
         
-        for i in 3..<5 {
-            let _ = Note(content: notes[i], context: context)
-        }
-        
-        // for _ in 0..<10 {
-        //     let _ = Note(content: notes[4], context: context)
-        // }
+        let _ = Note(content: notes[3], inTrash: true, context: context)
+        let _ = Note(content: notes[4], context: context)
         
         // Attempt to save sample data to the managed object context
         do {

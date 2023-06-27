@@ -13,6 +13,7 @@ extension Note {
         content: String = "",
         date: Date = Date.now,
         folder: Folder? = nil,
+        inTrash: Bool = false,
         context: NSManagedObjectContext
     ) {
         self.init(context: context)
@@ -20,6 +21,8 @@ extension Note {
         self.date = date
         self.id = UUID()
         self.folder = folder
+        self.inTrash = inTrash
+
         try! context.obtainPermanentIDs(for: [self])
     }
     
@@ -60,6 +63,7 @@ extension Folder {
         self.id = UUID()
         self.name = name
         self.icon = icon
+        
         try! context.obtainPermanentIDs(for: [self])
     }
     
@@ -85,8 +89,25 @@ extension Folder {
     
 }
 
-struct MenuItem: Identifiable, Hashable {
-    let id = UUID()
+struct NoteGroup: Hashable {
     let name: String
-    let image: String
+    let icon: String
+    
+    private init(name: String, icon: String) {
+        self.name = name
+        self.icon = icon
+    }
+    
+    static let allNotes = NoteGroup(name: "All Notes", icon: "tray.full")
+    static let trash = NoteGroup(name: "Trash", icon: "trash")
+}
+
+enum SidebarItem: Hashable {
+    case group(NoteGroup)
+    case folder(NSManagedObjectID)
+}
+
+enum SidebarSection: Int, CaseIterable {
+    case groups
+    case folders
 }

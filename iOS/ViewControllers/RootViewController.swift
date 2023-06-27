@@ -53,14 +53,10 @@ class RootViewController: UISplitViewController {
     
 }
 
-struct Preview: PreviewProvider {
+struct RootViewPreviews: PreviewProvider {
     static var previews: some View {
         ViewControllerPreview {
             RootViewController()
         }
     }
 }
-
-//#Preview {
-//    RootViewController()
-//}
