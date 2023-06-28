@@ -160,8 +160,8 @@
 				A4E4653A2A36018E00DD8B86 /* RootViewController.swift */,
 				A4E4652C2A3569CA00DD8B86 /* SidebarViewController.swift */,
 				A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */,
-				A4E465302A3573F400DD8B86 /* NoteEditorController.swift */,
 				A415C00A2A4B96680045A928 /* TrashViewController.swift */,
+				A4E465302A3573F400DD8B86 /* NoteEditorController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";

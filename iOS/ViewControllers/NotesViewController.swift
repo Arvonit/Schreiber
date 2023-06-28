@@ -160,15 +160,16 @@ extension NotesViewController: NSFetchedResultsControllerDelegate {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot()
 
+        // NOTE: We don't need to do this anymore for some reason
         // Reload data if there are changes
-        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-                return nil
-            }
-            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-            return itemIdentifier
-        }
-        snapshot.reloadItems(reloadIdentifiers)
+        // let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+        //     guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+        //         return nil
+        //     }
+        //     guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+        //     return itemIdentifier
+        // }
+        // snapshot.reloadItems(reloadIdentifiers)
 
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
     }
