@@ -42,7 +42,7 @@ class DataController: ObservableObject {
         return data
     }()
     
-    static let shared = preview
+    static let shared = DataController()
     
     var context: NSManagedObjectContext {
         container.viewContext

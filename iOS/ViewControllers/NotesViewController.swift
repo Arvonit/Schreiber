@@ -103,7 +103,17 @@ class NotesViewController: UIViewController {
             }
             del.image = UIImage(systemName: "trash.fill")
             
-            return UISwipeActionsConfiguration(actions: [del])
+            let move = UIContextualAction(style: .normal, title: "Move") {
+                action, view, completion in
+                // Display move note view as sheet
+                let vc = MoveNoteViewController(note: note, currentFolder: note.folder)
+                // let vc = SidebarViewController()
+                self.present(UINavigationController(rootViewController: vc), animated: true)
+            }
+            move.image = UIImage(systemName: "folder.fill")
+            move.backgroundColor = UIColor(.yellow)
+            
+            return UISwipeActionsConfiguration(actions: [del, move])
         }
         
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)

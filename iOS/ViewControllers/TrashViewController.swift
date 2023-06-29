@@ -77,7 +77,7 @@ class TrashViewController: UIViewController {
 
                 completion(true)
             }
-            restore.image = UIImage(systemName: "folder.fill")
+            restore.image = UIImage(systemName: "trash.slash.fill")
             restore.backgroundColor = UIColor(Color.purple)
 
             return UISwipeActionsConfiguration(actions: [restore])
@@ -130,14 +130,14 @@ extension TrashViewController: NSFetchedResultsControllerDelegate {
         let currentSnapshot = dataSource.snapshot()
 
         // Reload data if there are changes
-        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-                return nil
-            }
-            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-            return itemIdentifier
-        }
-        snapshot.reloadItems(reloadIdentifiers)
+        // let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+        //     guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+        //         return nil
+        //     }
+        //     guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+        //     return itemIdentifier
+        // }
+        // snapshot.reloadItems(reloadIdentifiers)
 
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
     }

@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - Core Data stack
     
-    lazy var dataController: DataController = DataController.preview
+    lazy var dataController: DataController = DataController.shared
 
 }
 

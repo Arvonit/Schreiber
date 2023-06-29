@@ -15,6 +15,7 @@
 		A40A83E32A3A80A300259015 /* ViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40A83E22A3A80A300259015 /* ViewPreview.swift */; };
 		A40A83E42A3A80A300259015 /* ViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40A83E22A3A80A300259015 /* ViewPreview.swift */; };
 		A415C00B2A4B96680045A928 /* TrashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A415C00A2A4B96680045A928 /* TrashViewController.swift */; };
+		A415C00D2A4D1B010045A928 /* MoveNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A415C00C2A4D1B010045A928 /* MoveNoteViewController.swift */; };
 		A41B87172A3A76DE000415AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87162A3A76DE000415AD /* AppDelegate.swift */; };
 		A41B87192A3A76DE000415AD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87182A3A76DE000415AD /* ViewController.swift */; };
 		A41B871E2A3A76DF000415AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A41B871D2A3A76DF000415AD /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 		A4003D962A3FA58500D3DC8E /* NotesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotesView.xib; sourceTree = "<group>"; };
 		A40A83E22A3A80A300259015 /* ViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPreview.swift; sourceTree = "<group>"; };
 		A415C00A2A4B96680045A928 /* TrashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashViewController.swift; sourceTree = "<group>"; };
+		A415C00C2A4D1B010045A928 /* MoveNoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveNoteViewController.swift; sourceTree = "<group>"; };
 		A41B87142A3A76DE000415AD /* Schreiber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schreiber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A41B87162A3A76DE000415AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A41B87182A3A76DE000415AD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				A4E4652C2A3569CA00DD8B86 /* SidebarViewController.swift */,
 				A4E4652E2A356F1200DD8B86 /* NotesViewController.swift */,
 				A415C00A2A4B96680045A928 /* TrashViewController.swift */,
+				A415C00C2A4D1B010045A928 /* MoveNoteViewController.swift */,
 				A4E465302A3573F400DD8B86 /* NoteEditorController.swift */,
 			);
 			path = ViewControllers;
@@ -337,6 +340,7 @@
 				A4E465202A35634900DD8B86 /* Schreiber.xcdatamodeld in Sources */,
 				A4E465162A35634900DD8B86 /* AppDelegate.swift in Sources */,
 				A40A83E32A3A80A300259015 /* ViewPreview.swift in Sources */,
+				A415C00D2A4D1B010045A928 /* MoveNoteViewController.swift in Sources */,
 				A4E465392A35802400DD8B86 /* NSManagedObjectContext+Helpers.swift in Sources */,
 				A4E4653B2A36018E00DD8B86 /* RootViewController.swift in Sources */,
 				A41B87492A3A7E1C000415AD /* ViewControllerPreview.swift in Sources */,
