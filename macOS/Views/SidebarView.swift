@@ -10,18 +10,17 @@ import SwiftUI
 struct SidebarView: View {
     // @Environment(\.managedObjectContext) var context: NSManagedObjectContext
     @FetchRequest(sortDescriptors: [SortDescriptor<Folder>(\.name)]) private var folders
-    // @State var selectedFolder: UUID? = nil
     @State var selectedItem: ListItem? = nil
-    var labels = [
-        MenuItem(name: "All Notes", image: "tray.full"),
-        MenuItem(name: "Trash", image: "trash")
+    var groups = [
+        NoteGroup.allNotes,
+        NoteGroup.trash
     ]
 
     var body: some View {
         List(selection: $selectedItem) {
-            ForEach(labels) { label in
-                Label(label.name, systemImage: label.image)
-                    .tag(ListItem.item(label))
+            ForEach(groups) { group in
+                Label(group.name, systemImage: group.icon)
+                    .tag(ListItem.item(group))
             }
             
             Section(header: Text("Folders")) {
@@ -43,13 +42,7 @@ struct SidebarViewPreviews: PreviewProvider {
     }
 }
 
-struct MenuItem: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let image: String
-}
-
 enum ListItem: Hashable {
     case folder(Folder)
-    case item(MenuItem)
+    case item(NoteGroup)
 }

@@ -12,22 +12,17 @@ struct NoteCellView: View {
     let note: Note
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yy"
+        formatter.dateFormat = "MMMM d, yyyy h:mm a"
         return formatter
     }()
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
-            // Text(note.safeDate, formatter: dateFormatter)
-            //     .font(.subheadline)
+        VStack(alignment: .leading, spacing: 4) {
             Text(note.title)
-                .font(.headline)
-                .lineLimit(2)
+                .font(.body)
+                // .lineLimit(2)
             Text(note.safeDate, formatter: dateFormatter)
-                .font(.subheadline)
-            // Text(note.contentWithoutTitle)
-            //     .font(.callout)
-            //     .lineLimit(3)
+                .font(.caption)
         }
     }    
 }

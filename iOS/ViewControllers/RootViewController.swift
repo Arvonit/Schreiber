@@ -10,8 +10,8 @@ import SwiftUI
 
 class RootViewController: UISplitViewController {
     
-    override init(style: UISplitViewController.Style = .tripleColumn) {
-        super.init(style: style)
+    init() {
+        super.init(style: .tripleColumn)
     }
     
     required init?(coder: NSCoder) {
@@ -29,24 +29,25 @@ class RootViewController: UISplitViewController {
         
         // Add lists to split view
         setViewController(SidebarViewController(), for: .primary)
-        setViewController(createPlaceholderView("Select a folder"), for: .supplementary)
-        setViewController(createPlaceholderView("Select a note"), for: .secondary)
+        setViewController(makePlaceholderVC("Select a folder"), for: .supplementary)
+        setViewController(makePlaceholderVC("Select a note"), for: .secondary)
         
         // Make folders view top of navigation stack for iPhone
-        setViewController(UINavigationController(rootViewController: SidebarViewController()), for: .compact)
+        setViewController(UINavigationController(rootViewController: SidebarViewController()),
+                          for: .compact)
     }
     
-    func createPlaceholderView(_ text: String) -> UIViewController {
+    func makePlaceholderVC(_ text: String) -> UIViewController {
         let vc = UIViewController()
         let label = UILabel()
         vc.view.addSubview(label)
         label.text = text
         label.font = .preferredFont(forTextStyle: .title1)
         label.textColor = .systemGray
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
-        label.textAlignment = .center
         vc.view.backgroundColor = .systemBackground
         return vc
     }
@@ -57,6 +58,7 @@ struct RootViewPreviews: PreviewProvider {
     static var previews: some View {
         ViewControllerPreview {
             RootViewController()
+                .makePlaceholderVC("Test")
         }
     }
 }

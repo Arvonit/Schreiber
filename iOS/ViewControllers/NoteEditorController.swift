@@ -56,13 +56,18 @@ class NoteEditorController: UIViewController {
     
     func configTextView() {
         editor = UITextView(frame: view.bounds)
-        editor.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         view.addSubview(editor)
         
+        editor.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         editor.font = .preferredFont(forTextStyle: .body)
         editor.text = note.safeContent
         editor.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         editor.delegate = self
+        
+        // Cannot edit note in trash
+        if note.inTrash {
+            editor.isUserInteractionEnabled = false
+        }
     }
     
 }

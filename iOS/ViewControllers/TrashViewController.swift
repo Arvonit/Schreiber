@@ -12,11 +12,6 @@ import SwiftUI
 class TrashViewController: UIViewController {
     
     var dataController = (UIApplication.shared.delegate as! AppDelegate).dataController
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM d, yyyy h:mm a"
-        return formatter
-    }()
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
@@ -43,23 +38,18 @@ class TrashViewController: UIViewController {
         title = "Trash"
     }
     
-    func configCollectionView() {
-        var configuration = UICollectionLayoutListConfiguration(appearance: isCompact ? .insetGrouped : .sidebarPlain)
+    func makeListLayout() -> UICollectionViewCompositionalLayout {
+        var configuration = UICollectionLayoutListConfiguration(
+            appearance: isCompact ? .insetGrouped : .sidebarPlain
+        )
         
         // Delete swipe action
         configuration.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
             guard let self = self else { return nil }
             guard let note: Note = dataController.getManagedObject(
                 id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
-            
-            let del = UIContextualAction(style: .destructive, title: "Delete") {
-                action, view, completion in
-                self.dataController.delete(note)
-                self.dataController.save()
-
-                completion(true)
-            }
-            del.image = UIImage(systemName: "trash.fill")
+                        
+            let del = self.makeDeleteSwipeAction(for: note)
             
             return UISwipeActionsConfiguration(actions: [del])
         }
@@ -70,20 +60,44 @@ class TrashViewController: UIViewController {
             guard let note: Note = dataController.getManagedObject(
                 id: self.dataSource.snapshot().itemIdentifiers[indexPath.row]) else { return nil }
             
-            let restore = UIContextualAction(style: .destructive, title: "Restore") {
-                action, view, completion in
-                note.inTrash = false
-                self.dataController.save()
-
-                completion(true)
-            }
-            restore.image = UIImage(systemName: "trash.slash.fill")
-            restore.backgroundColor = UIColor(Color.purple)
-
+            let restore = self.makeRestoreSwipeAction(for: note)
+            
             return UISwipeActionsConfiguration(actions: [restore])
         }
         
-        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+        return UICollectionViewCompositionalLayout.list(using: configuration)
+    }
+    
+    func makeDeleteSwipeAction(for note: Note) -> UIContextualAction {
+        let del = UIContextualAction(style: .destructive, title: "Delete") {
+            action, view, completion in
+            self.dataController.delete(note)
+            self.dataController.save()
+
+            completion(true)
+        }
+        del.image = UIImage(systemName: "trash.fill")
+        
+        return del
+    }
+    
+    func makeRestoreSwipeAction(for note: Note) -> UIContextualAction {
+        let restore = UIContextualAction(style: .destructive, title: "Restore") {
+            action, view, completion in
+            note.inTrash = false
+            self.dataController.save()
+
+            completion(true)
+        }
+        restore.image = UIImage(systemName: "trash.slash.fill")
+        restore.backgroundColor = UIColor(Color.purple)
+
+        return restore
+    }
+    
+    func configCollectionView() {
+        let layout = makeListLayout()
+        
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         collectionView.delegate = self
@@ -92,32 +106,26 @@ class TrashViewController: UIViewController {
     }
     
     func configDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { (cell, indexPath, item) in
-            guard let note: Note = self.dataController.getManagedObject(id: item) else {
-                return
-            }
-                        
-            var content = cell.defaultContentConfiguration()
-            content.text = note.title
-            content.secondaryText = self.dateFormatter.string(from: note.safeDate)
-            cell.contentConfiguration = content
-        }
+        let cellRegistration = ViewHelper.makeNoteCell(using: dataController)
         
-        dataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: NSManagedObjectID) -> UICollectionViewCell? in
-            
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+        dataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(
+            collectionView: collectionView
+        ) { collectionView, indexPath, item in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
+                                                                for: indexPath,
+                                                                item: item)
         }
     }
     
     func configFRC() {
         let request = Note.fetchRequest()
         request.predicate = NSPredicate(format: "inTrash == true")
-        request.sortDescriptors = [
-            NSSortDescriptor(key: "date", ascending: false)
-        ]
+        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
         
-        frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: dataController.context, sectionNameKeyPath: nil, cacheName: nil)
+        frc = NSFetchedResultsController(fetchRequest: request,
+                                         managedObjectContext: dataController.context,
+                                         sectionNameKeyPath: nil,
+                                         cacheName: nil)
         frc.delegate = self
         try! frc.performFetch()
     }
@@ -125,34 +133,22 @@ class TrashViewController: UIViewController {
 }
 
 extension TrashViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = dataSource.snapshot()
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        let snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
 
-        // Reload data if there are changes
-        // let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-        //     guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-        //         return nil
-        //     }
-        //     guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-        //     return itemIdentifier
-        // }
-        // snapshot.reloadItems(reloadIdentifiers)
-
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>,
+                         animatingDifferences: collectionView.numberOfSections != 0)
     }
 }
 
 extension TrashViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let snapshot = dataSource.snapshot()
-        guard let note: Note = dataController.getManagedObject(id: snapshot.itemIdentifiers[indexPath.row]) else {
+        let id = dataSource.snapshot().itemIdentifiers[indexPath.row]
+        guard let note: Note = dataController.getManagedObject(id: id) else {
             return
         }
         let vc = NoteEditorController(note: note)
-        
-        // Cannot edit notes in trash
-        // vc.editor.isEditable = false
         
         if isCompact {
             collectionView.deselectItem(at: indexPath, animated: true)

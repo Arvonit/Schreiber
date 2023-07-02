@@ -89,11 +89,13 @@ extension Folder {
     
 }
 
-struct NoteGroup: Hashable {
+struct NoteGroup: Hashable, Identifiable {
+    let id: UUID
     let name: String
     let icon: String
     
     private init(name: String, icon: String) {
+        self.id = UUID()
         self.name = name
         self.icon = icon
     }
