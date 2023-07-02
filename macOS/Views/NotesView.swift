@@ -6,34 +6,66 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct NotesView: View {
-    // @Environment(\.managedObjectContext) var context: NSManagedObjectContext
-    @FetchRequest(sortDescriptors: [SortDescriptor<Note>(\.date)]) private var notes
-    @State var selectedNotes = Set<UUID>()
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yy"
-        return formatter
-    }()
+    @Environment(\.managedObjectContext) var context: NSManagedObjectContext
+    // @State var selectedNotes = Set<UUID>()
+    let folder: Folder?
+    let handler: ((Note) -> Void)?
+    @FetchRequest private var notes: FetchedResults<Note>
+    @State var selectedNote: Note?
+    
+    init(folder: Folder? = nil, handler: ((Note) -> Void)? = nil) {
+        self.folder = folder
+        self.handler = handler
+        
+        let request = Note.fetchRequest()
+        if let folder = folder {
+            request.predicate = NSPredicate(format: "inTrash == false and folder == %@", folder)
+        } else {
+            request.predicate = NSPredicate(format: "inTrash == false")
+        }
+        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+
+        self._notes = FetchRequest(fetchRequest: request)
+        self.selectedNote = nil
+    }
 
     var body: some View {
-        List(selection: $selectedNotes) {
-            ForEach(notes, id: \.safeID) { note in
-                VStack(alignment: .leading) {
-                    Text(note.title)
-                        // .bold()
-                    Text(note.safeDate, formatter: dateFormatter)
-                        .font(.caption)
-                }
+        List(selection: $selectedNote) {
+            ForEach(notes, id: \.self) { note in
+                NoteCellView(note: note)
+                    .swipeActions(edge: .trailing) {
+                        deleteSwipeAction(note: note)
+                    }
             }
         }
+        .onChange(of: selectedNote) { newValue in
+            if let handler = handler {
+                handler(newValue!)
+            }
+        }
+        .onAppear {
+            selectedNote = notes.first
+        }
     }
+    
+    private func deleteSwipeAction(note: Note) -> some View {
+        Button(role: .destructive) {
+            note.inTrash = true
+            try! context.save()
+        } label: {
+            Label("Delete", systemImage: "trash.fill")
+        }
+        .tint(.red)
+    }
+
 }
 
 struct NotesViewPreviews: PreviewProvider {
     static var previews: some View {
-        NotesView()
+        NotesView(handler: { _ in })
             .environment(\.managedObjectContext, DataController.preview.context)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  RootViewController.swift
+//  MainViewController.swift
 //  Schreiber
 //
 //  Created by Arvind on 6/11/23.
@@ -8,7 +8,7 @@
 import UIKit
 import SwiftUI
 
-class RootViewController: UISplitViewController {
+class MainViewController: UISplitViewController {
     
     init() {
         super.init(style: .tripleColumn)
@@ -54,10 +54,10 @@ class RootViewController: UISplitViewController {
     
 }
 
-struct RootViewPreviews: PreviewProvider {
+struct MainViewPreviews: PreviewProvider {
     static var previews: some View {
         ViewControllerPreview {
-            RootViewController()
+            MainViewController()
                 .makePlaceholderVC("Test")
         }
     }
