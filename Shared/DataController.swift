@@ -63,7 +63,7 @@ class DataController: ObservableObject {
                 try context.save()
             } catch {
                 // TODO: Display an error alert to the user and send a log crash to me
-                fatalError("Fatal error while saving changes: \(error.localizedDescription)")
+                fatalError("While saving changes: \(error.localizedDescription)")
             }
         }
     }

@@ -31,13 +31,13 @@ class MainViewController: NSSplitViewController {
         )
         addSplitViewItem(notesView)
 
-        noteEditor = NSSplitViewItem(viewController: makePlaceholderVC("Select a note"))
+        noteEditor = NSSplitViewItem(viewController: makePlaceholderVC(""))
         addSplitViewItem(noteEditor)
     }
         
     func makePlaceholderVC(_ text: String) -> NSViewController {
         let vc = NSViewController()
-        let backgroundView = NSView(frame: NSRect(x: 0, y: 0, width: 300, height: 300))
+        let backgroundView = NSView(frame: NSRect(x: 0, y: 0, width: 275, height: 300))
         let label = NSTextField(labelWithString: text)
     
         // backgroundView.wantsLayer = true
@@ -93,6 +93,11 @@ class MainViewController: NSSplitViewController {
         removeSplitViewItem(notesView)
         notesView.viewController = vc
         insertSplitViewItem(notesView, at: 1)
+        
+        // This means there are no notes
+        removeSplitViewItem(noteEditor)
+        noteEditor.viewController = makePlaceholderVC("")
+        insertSplitViewItem(noteEditor, at: 2)
     }
     
     func onNoteSelection(newNote: Note) {

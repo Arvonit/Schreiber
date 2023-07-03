@@ -41,14 +41,20 @@ struct NotesView: View {
                     }
             }
         }
+        // Delegate function
         .onChange(of: selectedNote) { newValue in
-            if let handler = handler {
-                handler(newValue!)
+            if let handler = handler, let newValue = newValue {
+                handler(newValue)
             }
+        }
+        // Select new note when it is added
+        .onChange(of: notes.count) { newValue in
+            selectedNote = notes.first
         }
         .onAppear {
             selectedNote = notes.first
         }
+        .frame(minWidth: 275)
     }
     
     private func deleteSwipeAction(note: Note) -> some View {

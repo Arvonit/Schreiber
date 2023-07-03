@@ -7,40 +7,130 @@
 
 import Cocoa
 
-// private extension NSToolbarItem.Identifier {
-//     static let itemListTrackingSeparator = NSToolbarItem.Identifier("ItemListTrackingSeparator")
-//     static let itemListTrackingSeparator2 = NSToolbarItem.Identifier("ItemListTrackingSeparator2")
-// }
-
 class MainWindowController: NSWindowController {
     
-    @IBOutlet weak var toolbar: NSToolbar!
+    var dataController = (NSApplication.shared.delegate as! AppDelegate).controller
+    
+    let mainToolbar = NSToolbar.Identifier("MainToolbar")
+    let secondaryDivider = NSToolbarItem.Identifier(rawValue: "SecondaryDivider")
+    let addNoteIdentifier = NSToolbarItem.Identifier(rawValue: "AddNote")
+    let addFolderIdentifier = NSToolbarItem.Identifier(rawValue: "AddFolder")
+    
     @IBOutlet weak var view: NSView!
     
-    // Dangerous convenience alias so you can access the NSSplitViewController and manipulate it later on
-    private var splitViewController: MainViewController! {
-        contentViewController as? MainViewController
-    }
-
     override func windowDidLoad() {
         super.windowDidLoad()
-        // toolbar.delegate = self
-        // toolbar.insertItem(withItemIdentifier: .itemListTrackingSeparator, at: 0)
+
+        // We need to create our own toolbar, otherwise stuff breaks
+        let toolbar = NSToolbar(identifier: mainToolbar)
+        toolbar.delegate = self
+        toolbar.displayMode = .iconOnly
+        toolbar.allowsUserCustomization = false
+                
+        self.window?.toolbar = toolbar
+    }
+    
+    @objc func addNewNote() {
+        let _ = Note(folder: nil, context: dataController.context) // Need to put folder, otherwise calls default initializer
+        self.dataController.save()
+    }
+    
+    @objc func addNewFolder() {
+        let alert = NSAlert()
+        alert.messageText = "Add a new folder"
+        alert.informativeText = "Enter a name"
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+        
+        let input = NSTextField(frame: NSRect(x: 0, y: 0, width: 225, height: 24))
+        input.bezelStyle = .roundedBezel
+        input.placeholderString = "Folder"
+        alert.accessoryView = input
+        
+        alert.beginSheetModal(for: self.window!) { response in
+            if response == .alertFirstButtonReturn {
+                let name = input.stringValue
+                let _ = Folder(name: name, context: self.dataController.context)
+                self.dataController.save()
+            }
+        }
     }
     
 }
 
-// extension MainWindowController: NSToolbarDelegate {
-//     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-//         switch itemIdentifier {
-//         case .itemListTrackingSeparator:
-//             if ((splitViewController) != nil) {
-//                 return NSTrackingSeparatorToolbarItem(identifier: .itemListTrackingSeparator, splitView: splitViewController.splitView, dividerIndex: 1)
-//             } else {
-//                 return nil
-//             }
-//         default:
-//             return nil
-//         }
-//     }
-// }
+
+extension MainWindowController: NSToolbarDelegate {
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [
+            .flexibleSpace,
+            self.addFolderIdentifier,
+            .sidebarTrackingSeparator,
+            .toggleSidebar,
+            self.addNoteIdentifier,
+            self.secondaryDivider,
+        ]
+    }
+
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [
+            .flexibleSpace,
+            self.addFolderIdentifier,
+            .sidebarTrackingSeparator,
+            .toggleSidebar,
+            self.addNoteIdentifier,
+            self.secondaryDivider,
+        ]
+    }
+
+    
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        if let splitView = (self.contentViewController as? NSSplitViewController)?.splitView {
+            if itemIdentifier == addNoteIdentifier {
+                let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+                let button = NSButton(image: NSImage(systemSymbolName: "square.and.pencil",
+                                                     accessibilityDescription: "Add")!,
+                                      target: self,
+                                      action: #selector(addNewNote))
+                button.bezelStyle = NSButton.BezelStyle.texturedRounded
+                item.tag = 2
+                item.view = button
+                
+                let menuItem = NSMenuItem()
+                menuItem.submenu = nil
+                menuItem.title = "Add"
+
+                item.menuFormRepresentation = menuItem
+                
+                
+                return item
+            }
+            
+            if itemIdentifier == addFolderIdentifier {
+                let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+                let button = NSButton(image: NSImage(systemSymbolName: "plus",
+                                                     accessibilityDescription: "Add")!,
+                                      target: self,
+                                      action: #selector(addNewFolder))
+                button.bezelStyle = NSButton.BezelStyle.texturedRounded
+                item.tag = 1
+                item.view = button
+                
+                let menuItem = NSMenuItem()
+                menuItem.submenu = nil
+                menuItem.title = "Add"
+
+                item.menuFormRepresentation = menuItem
+
+                
+                return item
+            }
+
+
+            // You must implement this for custom separator identifiers, to connect the separator with a split view divider
+            if itemIdentifier == secondaryDivider {
+                return NSTrackingSeparatorToolbarItem(identifier: itemIdentifier, splitView: splitView, dividerIndex: 1)
+            }
+        }
+        return nil
+    }
+}

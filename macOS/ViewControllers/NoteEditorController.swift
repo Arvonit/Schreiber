@@ -41,6 +41,6 @@ class NoteEditorController: NSViewController {
 
 extension NoteEditorController: NSTextViewDelegate {
     func textDidChange(_ notification: Notification) {
-        print(notification)
+        // print(notification)
     }
 }

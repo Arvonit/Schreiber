@@ -693,16 +693,11 @@
                             <rect key="frame" x="0.0" y="0.0" width="480" height="300"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
-                        <toolbar key="toolbar" implicitIdentifier="4F1D0C1E-0CF5-4A67-A1C7-6B3B0BA1371A" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="sxe-0g-6iG">
-                            <allowedToolbarItems/>
-                            <defaultToolbarItems/>
-                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="cvv-4x-gWK" id="KuK-ko-tmI"/>
                         </connections>
                     </window>
                     <connections>
-                        <outlet property="toolbar" destination="sxe-0g-6iG" id="bQ1-ZF-9QB"/>
                         <outlet property="view" destination="gXo-Mg-Vph" id="0LV-47-bMx"/>
                         <outlet property="window" destination="Ugk-kT-EzJ" id="rL6-ZD-ScT"/>
                         <segue destination="pk6-Bh-sht" kind="relationship" relationship="window.shadowedContentViewController" id="5yA-3S-fen"/>

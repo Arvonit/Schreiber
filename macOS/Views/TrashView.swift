@@ -23,6 +23,9 @@ struct TrashView: View {
                     .swipeActions(edge: .leading) {
                         restoreSwipeAction(note: note)
                     }
+                    .swipeActions(edge: .trailing) {
+                        deleteSwipeAction(note: note)
+                    }
             }
         }
         .onChange(of: selectedNote) { newValue in
@@ -33,6 +36,7 @@ struct TrashView: View {
         .onAppear {
             selectedNote = notes.first
         }
+        .frame(minWidth: 275)
     }
     
     private func restoreSwipeAction(note: Note) -> some View {
@@ -43,6 +47,16 @@ struct TrashView: View {
             Label("Restore", systemImage: "trash.slash.fill")
         }
         .tint(.purple)
+    }
+    
+    private func deleteSwipeAction(note: Note) -> some View {
+        Button(role: .destructive) {
+            context.delete(note)
+            try! context.save()
+        } label: {
+            Label("Delete", systemImage: "trash.fill")
+        }
+        .tint(.red)
     }
 
 }

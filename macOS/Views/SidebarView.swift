@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SidebarView: View {
-    // @Environment(\.managedObjectContext) var context: NSManagedObjectContext
+    @Environment(\.managedObjectContext) var context: NSManagedObjectContext
     @FetchRequest(sortDescriptors: [SortDescriptor<Folder>(\.name)]) private var folders
     @State var selectedItem: SidebarItem? = nil
     var groups = [
@@ -28,15 +28,28 @@ struct SidebarView: View {
                 ForEach(folders) { folder in
                     FolderCellView(folder: folder)
                         .tag(SidebarItem.folder(folder.objectID))
+                        .swipeActions(edge: .trailing) {
+                            deleteSwipeAction(folder: folder)
+                        }
                 }
             }
         }
         .listStyle(.sidebar)
         .onChange(of: selectedItem) { newValue in
-            if let handler = handler {
-                handler(newValue!)
+            if let handler = handler, let newValue = newValue {
+                handler(newValue)
             }
         }
+    }
+    
+    private func deleteSwipeAction(folder: Folder) -> some View {
+        Button(role: .destructive) {
+            context.delete(folder)
+            try! context.save()
+        } label: {
+            Label("Delete", systemImage: "trash.fill")
+        }
+        .tint(.red)
     }
 }
 
