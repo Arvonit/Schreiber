@@ -122,8 +122,8 @@
 				A41B87162A3A76DE000415AD /* AppDelegate.swift */,
 				A41B87182A3A76DE000415AD /* ViewController.swift */,
 				A4003D842A3EC17700D3DC8E /* MainWindowController.swift */,
-				A41B871D2A3A76DF000415AD /* Assets.xcassets */,
 				A41B871F2A3A76DF000415AD /* Main.storyboard */,
+				A41B871D2A3A76DF000415AD /* Assets.xcassets */,
 				A41B87222A3A76DF000415AD /* macOS.entitlements */,
 			);
 			path = macOS;

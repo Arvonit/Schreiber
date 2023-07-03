@@ -698,8 +698,6 @@
                         </connections>
                     </window>
                     <connections>
-                        <outlet property="view" destination="gXo-Mg-Vph" id="0LV-47-bMx"/>
-                        <outlet property="window" destination="Ugk-kT-EzJ" id="rL6-ZD-ScT"/>
                         <segue destination="pk6-Bh-sht" kind="relationship" relationship="window.shadowedContentViewController" id="5yA-3S-fen"/>
                     </connections>
                 </windowController>

@@ -14,7 +14,7 @@ class MainViewController: NSSplitViewController {
     var sidebar: NSSplitViewItem!
     var notesView: NSSplitViewItem!
     var noteEditor: NSSplitViewItem!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -72,6 +72,8 @@ class MainViewController: NSSplitViewController {
                     rootView: NotesView(handler: onNoteSelection)
                         .environment(\.managedObjectContext, dataController.context)
                 )
+                
+                // vc = NotesViewController(nibName: "NotesView", bundle: nil)
             } else {
                 // Trash
                 vc = NSHostingController(

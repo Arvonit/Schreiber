@@ -28,7 +28,7 @@ struct NotesView: View {
         }
         request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
 
-        self._notes = FetchRequest(fetchRequest: request)
+        self._notes = FetchRequest(fetchRequest: request, animation: .default)
         self.selectedNote = nil
     }
 
@@ -36,6 +36,7 @@ struct NotesView: View {
         List(selection: $selectedNote) {
             ForEach(notes, id: \.self) { note in
                 NoteCellView(note: note)
+                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
                     .swipeActions(edge: .trailing) {
                         deleteSwipeAction(note: note)
                     }
@@ -48,9 +49,9 @@ struct NotesView: View {
             }
         }
         // Select new note when it is added
-        .onChange(of: notes.count) { newValue in
-            selectedNote = notes.first
-        }
+        // .onChange(of: notes.count) { newValue in
+        //     selectedNote = notes.first
+        // }
         .onAppear {
             selectedNote = notes.first
         }

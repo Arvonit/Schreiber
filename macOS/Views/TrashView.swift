@@ -11,7 +11,8 @@ struct TrashView: View {
     @Environment(\.managedObjectContext) var context: NSManagedObjectContext
     @FetchRequest<Note>(
         sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)],
-        predicate: NSPredicate(format: "inTrash == true")
+        predicate: NSPredicate(format: "inTrash == true"),
+        animation: .default
     ) private var notes
     @State var selectedNote: Note?
     var handler: ((Note) -> Void)? = nil
@@ -20,6 +21,7 @@ struct TrashView: View {
         List(selection: $selectedNote) {
             ForEach(notes, id: \.self) { note in
                 NoteCellView(note: note)
+                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
                     .swipeActions(edge: .leading) {
                         restoreSwipeAction(note: note)
                     }
@@ -29,8 +31,8 @@ struct TrashView: View {
             }
         }
         .onChange(of: selectedNote) { newValue in
-            if let handler = handler {
-                handler(newValue!)
+            if let handler = handler, let newValue = newValue {
+                handler(newValue)
             }
         }
         .onAppear {

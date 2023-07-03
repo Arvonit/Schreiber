@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import SwiftUI
 
 class MainWindowController: NSWindowController {
     
@@ -15,18 +16,16 @@ class MainWindowController: NSWindowController {
     let secondaryDivider = NSToolbarItem.Identifier(rawValue: "SecondaryDivider")
     let addNoteIdentifier = NSToolbarItem.Identifier(rawValue: "AddNote")
     let addFolderIdentifier = NSToolbarItem.Identifier(rawValue: "AddFolder")
-    
-    @IBOutlet weak var view: NSView!
-    
+        
     override func windowDidLoad() {
         super.windowDidLoad()
 
-        // We need to create our own toolbar, otherwise stuff breaks
+        // We need to create our own toolbar
+        // Using IB's toolbar can sometimes not load toolbar items on time
         let toolbar = NSToolbar(identifier: mainToolbar)
         toolbar.delegate = self
         toolbar.displayMode = .iconOnly
         toolbar.allowsUserCustomization = false
-                
         self.window?.toolbar = toolbar
     }
     

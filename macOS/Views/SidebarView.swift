@@ -9,7 +9,8 @@ import SwiftUI
 
 struct SidebarView: View {
     @Environment(\.managedObjectContext) var context: NSManagedObjectContext
-    @FetchRequest(sortDescriptors: [SortDescriptor<Folder>(\.name)]) private var folders
+    @FetchRequest(sortDescriptors: [SortDescriptor<Folder>(\.name)],
+                  animation: .default) private var folders
     @State var selectedItem: SidebarItem? = nil
     var groups = [
         NoteGroup.allNotes,
