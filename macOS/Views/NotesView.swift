@@ -70,9 +70,7 @@ struct NotesView: View {
 
 }
 
-struct NotesViewPreviews: PreviewProvider {
-    static var previews: some View {
-        NotesView(handler: { _ in })
-            .environment(\.managedObjectContext, DataController.preview.context)
-    }
+#Preview {
+    NotesView(handler: { _ in })
+        .environment(\.managedObjectContext, DataController.preview.context)
 }

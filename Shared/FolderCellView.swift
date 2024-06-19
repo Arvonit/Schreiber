@@ -15,18 +15,16 @@ struct FolderCellView: View {
     }
 }
 
-struct FolderCellViewPreviews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            List {
-                FolderCellView(folder: Folder(name: "All Notes", icon: "tray.full", context: DataController.preview.context))
-                FolderCellView(folder: Folder(name: "Trash", icon: "trash", context: DataController.preview.context))
-                Section("Folders") {
-                    FolderCellView(folder: Folder(name: "Blog", context: DataController.preview.context))
-                }
+#Preview {
+    NavigationStack {
+        List {
+            FolderCellView(folder: Folder(name: "All Notes", icon: "tray.full", context: DataController.preview.context))
+            FolderCellView(folder: Folder(name: "Trash", icon: "trash", context: DataController.preview.context))
+            Section("Folders") {
+                FolderCellView(folder: Folder(name: "Blog", context: DataController.preview.context))
             }
-            .listStyle(.sidebar)
-            .navigationTitle("Schreiber")
         }
+        .listStyle(.sidebar)
+        .navigationTitle("Schreiber")
     }
 }

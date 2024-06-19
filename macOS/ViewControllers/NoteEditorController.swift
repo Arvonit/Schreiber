@@ -68,13 +68,9 @@ extension NoteEditorController: NSTextViewDelegate {
     }
 }
 
-struct NoteEditorPreviews: PreviewProvider {
-    static let exampleNote = Note(content: "Example note\n\nThis is a really cool document.",
+#Preview {
+    let exampleNote = Note(content: "Example note\n\nThis is a really cool document.",
                                   context: DataController.preview.context)
     
-    static var previews: some View {
-        ViewControllerPreview {
-            NoteEditorController(note: exampleNote)
-        }
-    }
+    return NoteEditorController(note: exampleNote)
 }

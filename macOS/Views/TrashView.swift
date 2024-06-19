@@ -63,8 +63,6 @@ struct TrashView: View {
 
 }
 
-struct TrashViewPreviews: PreviewProvider {
-    static var previews: some View {
-        TrashView()
-    }
+#Preview {
+    TrashView()
 }

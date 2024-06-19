@@ -196,10 +196,7 @@ extension NotesViewController: UICollectionViewDelegate {
     }
 }
 
-struct NotesViewPreviews: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            UINavigationController(rootViewController: NotesViewController())
-        }
-    }
+#Preview {
+    UINavigationController(rootViewController: NotesViewController())
 }
+

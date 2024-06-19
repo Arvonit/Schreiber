@@ -27,12 +27,10 @@ struct NoteCellView: View {
     }    
 }
 
-struct NoteCellPreviews: PreviewProvider {
-    static var previews: some View {
-        List {
-            NoteCellView(note: Note(content: "This is a test\nNew line", context: DataController.preview.context))
-            NoteCellView(note: Note(content: "This is a test\nNew line", context: DataController.preview.context))
-            NoteCellView(note: Note(content: "This is a test\nNew line", context: DataController.preview.context))
-        }
+#Preview {
+    List {
+        NoteCellView(note: Note(content: "This is a test\nNew line", context: DataController.preview.context))
+        NoteCellView(note: Note(content: "This is a test\nNew line", context: DataController.preview.context))
+        NoteCellView(note: Note(content: "This is a test\nNew line", context: DataController.preview.context))
     }
 }

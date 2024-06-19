@@ -160,10 +160,6 @@ extension TrashViewController: UICollectionViewDelegate {
     }
 }
 
-struct TrashViewPreviews: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            UINavigationController(rootViewController: TrashViewController())
-        }
-    }
+#Preview {
+    UINavigationController(rootViewController: TrashViewController())
 }

@@ -54,11 +54,7 @@ class MainViewController: UISplitViewController {
     
 }
 
-struct MainViewPreviews: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            MainViewController()
-                .makePlaceholderVC("Test")
-        }
-    }
+#Preview {
+    MainViewController()
+        .makePlaceholderVC("Test")
 }

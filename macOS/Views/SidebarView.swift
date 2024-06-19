@@ -54,9 +54,8 @@ struct SidebarView: View {
     }
 }
 
-struct SidebarViewPreviews: PreviewProvider {
-    static var previews: some View {
-        SidebarView()
-            .environment(\.managedObjectContext, DataController.preview.context)
-    }
+#Preview {
+    SidebarView()
+        .environment(\.managedObjectContext, DataController.preview.context)
 }
+

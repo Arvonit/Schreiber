@@ -306,10 +306,6 @@ extension SidebarViewController: UICollectionViewDelegate {
     }
 }
 
-struct SidebarViewPreviews: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            UINavigationController(rootViewController: SidebarViewController())
-        }
-    }
+#Preview {
+    UINavigationController(rootViewController: SidebarViewController())
 }
