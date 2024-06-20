@@ -1,5 +1,5 @@
 //
-//  NotesViewController.swift
+//  NotesViewControllerOld.swift
 //  Schreiber (macOS)
 //
 //  Created by Arvind on 6/15/23.
@@ -8,7 +8,7 @@
 import Cocoa
 import SwiftUI
 
-class NotesViewController: NSViewController {
+class NotesViewControllerOld: NSViewController {
     
     let dataController = (NSApplication.shared.delegate as! AppDelegate).controller
     
@@ -26,10 +26,13 @@ class NotesViewController: NSViewController {
     func configTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            view.widthAnchor.constraint(greaterThanOrEqualToConstant: 275)
-        ])
+        tableView.rowSizeStyle = .default
+        tableView.gridStyleMask = .solidHorizontalGridLineMask
+        // view.translatesAutoresizingMaskIntoConstraints = false
+        // NSLayoutConstraint.activate([
+        //     view.widthAnchor.constraint(greaterThanOrEqualToConstant: 275)
+        // ])
+        tableView.autoresizingMask = [.width, .height]
     }
     
     // func configDataSource() {
@@ -56,11 +59,25 @@ class NotesViewController: NSViewController {
         
 }
 
-extension NotesViewController: NSTableViewDelegate {
+extension NotesViewControllerOld: NSTableViewDelegate {
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier("NoteCell"), owner: self) as! NSTableCellView
         configureCell(cell: cell, row: row)
         return cell
+        
+        // let cellIdentifier = NSUserInterfaceItemIdentifier("NoteCell")
+        // if let cell = tableView.makeView(withIdentifier: cellIdentifier, owner: self) as? NSHostingView<NoteCellView> {
+        //     cell.rootView = NoteCellView(note: frc.fetchedObjects![row])
+        //         .padding(10) as! NoteCellView
+        //     return cell
+        // }
+        // 
+        // // Create a new NSHostingView with NoteCellView
+        // let cellView = NoteCellView(note: frc.fetchedObjects![row]).padding(10)
+        // let hostingView = NSHostingView(rootView: cellView)
+        // hostingView.identifier = cellIdentifier
+        // 
+        // return hostingView
     }
 
     private func configureCell(cell: NSTableCellView, row: Int) {
@@ -93,20 +110,20 @@ extension NotesViewController: NSTableViewDelegate {
     }
 }
 
-extension NotesViewController: NSTableViewDataSource {
+extension NotesViewControllerOld: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return frc.fetchedObjects?.count ?? 0
     }
 }
 
-extension NotesViewController: NSFetchedResultsControllerDelegate {
+extension NotesViewControllerOld: NSFetchedResultsControllerDelegate {
     
     // https://samwize.com/2018/11/16/guide-to-nsfetchedresultscontroller-with-nstableview-macos/
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?){
         switch type {
         case .insert:
             if let newIndexPath = newIndexPath {
-                tableView.insertRows(at: [newIndexPath.item], withAnimation: .effectFade)
+                tableView.insertRows(at: [newIndexPath.item], withAnimation: .slideDown)
             }
         case .delete:
             if let indexPath = indexPath {

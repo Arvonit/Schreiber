@@ -43,7 +43,7 @@ struct NotesView: View {
             }
         }
         // Delegate function
-        .onChange(of: selectedNote) { newValue in
+        .onChange(of: selectedNote) { oldValue, newValue in
             if let handler = handler, let newValue = newValue {
                 handler(newValue)
             }

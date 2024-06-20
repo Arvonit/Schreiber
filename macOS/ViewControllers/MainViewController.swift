@@ -68,12 +68,13 @@ class MainViewController: NSSplitViewController {
         case .group(let noteGroup):
             if noteGroup == .allNotes {
                 // All Notes
-                vc = NSHostingController(
-                    rootView: NotesView(handler: onNoteSelection)
-                        .environment(\.managedObjectContext, dataController.context)
-                )
+                // vc = NSHostingController(
+                //     rootView: NotesView(handler: onNoteSelection)
+                //         .environment(\.managedObjectContext, dataController.context)
+                // )
                 
-                // vc = NotesViewController(nibName: "NotesView", bundle: nil)
+                // vc = NotesViewControllerOld(nibName: "NotesView", bundle: nil)
+                vc = NotesViewController()
             } else {
                 // Trash
                 vc = NSHostingController(

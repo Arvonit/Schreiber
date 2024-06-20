@@ -23,8 +23,9 @@ struct NoteCellView: View {
                 // .lineLimit(2)
             Text(note.safeDate, formatter: dateFormatter)
                 .font(.caption)
+                .foregroundStyle(.secondary)
         }
-    }    
+    }
 }
 
 #Preview {

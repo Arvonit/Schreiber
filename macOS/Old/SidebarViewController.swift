@@ -25,6 +25,7 @@ class SidebarViewController: NSViewController {
     
     func configTableView() {
         // tableView.style = .inset
+        tableView.rowSizeStyle = .default
     }
     
     func configDataSource() {

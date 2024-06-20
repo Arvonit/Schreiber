@@ -30,7 +30,7 @@ struct TrashView: View {
                     }
             }
         }
-        .onChange(of: selectedNote) { newValue in
+        .onChange(of: selectedNote) { oldValue, newValue in
             if let handler = handler, let newValue = newValue {
                 handler(newValue)
             }

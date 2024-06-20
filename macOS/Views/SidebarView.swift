@@ -36,7 +36,7 @@ struct SidebarView: View {
             }
         }
         .listStyle(.sidebar)
-        .onChange(of: selectedItem) { newValue in
+        .onChange(of: selectedItem) { oldValue, newValue in
             if let handler = handler, let newValue = newValue {
                 handler(newValue)
             }
