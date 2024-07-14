@@ -24,7 +24,7 @@
 		A41B87462A3A7C02000415AD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465362A357F6200DD8B86 /* Models.swift */; };
 		A41B87482A3A7D47000415AD /* ViewControllerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */; };
 		A41B87492A3A7E1C000415AD /* ViewControllerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */; };
-		A41B874C2A3AAA7B000415AD /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */; };
+		A41B874C2A3AAA7B000415AD /* SidebarViewControllerOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41B874A2A3AAA4A000415AD /* SidebarViewControllerOld.swift */; };
 		A422B73E2A44FED1000BB5F7 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A422B73C2A44FED1000BB5F7 /* SidebarView.swift */; };
 		A4395B862A51E8AF007F6AE4 /* NoteCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4395B852A51E8AF007F6AE4 /* NoteCellView.swift */; };
 		A4395B8D2A51E917007F6AE4 /* ViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4395B8C2A51E917007F6AE4 /* ViewHelper.swift */; };
@@ -36,9 +36,13 @@
 		A4540BD52A472BFB00A656FB /* NotesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4003D962A3FA58500D3DC8E /* NotesView.xib */; };
 		A45580F02A4517E700EAE94F /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45580EE2A4517E700EAE94F /* NotesView.swift */; };
 		A48584862C23B64B007DBE28 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48584852C23B64B007DBE28 /* NotesViewController.swift */; };
-		A489CBEC2A3BEA6900A26715 /* NoteEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A489CBEB2A3BEA6900A26715 /* NoteEditorViewController.swift */; };
+		A48584882C24F122007DBE28 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48584872C24F122007DBE28 /* SidebarViewController.swift */; };
+		A485848A2C24F1D7007DBE28 /* Sidebar.xib in Resources */ = {isa = PBXBuildFile; fileRef = A48584892C24F1D7007DBE28 /* Sidebar.xib */; };
+		A489CBEC2A3BEA6900A26715 /* NoteEditorViewControllerOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = A489CBEB2A3BEA6900A26715 /* NoteEditorViewControllerOld.swift */; };
 		A49FD8392A3FB0DE00F47139 /* NoteEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A49FD8382A3FB0DE00F47139 /* NoteEditorView.xib */; };
 		A4B12DF32A3BE3E1002F4E2C /* NotesViewControllerOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B12DF22A3BE3E1002F4E2C /* NotesViewControllerOld.swift */; };
+		A4B320DF2C2A6C9900B47E93 /* SidebarCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B320DE2C2A6C9900B47E93 /* SidebarCellView.swift */; };
+		A4B320E12C2B46F500B47E93 /* TrashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B320E02C2B46F500B47E93 /* TrashViewController.swift */; };
 		A4E465162A35634900DD8B86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465152A35634900DD8B86 /* AppDelegate.swift */; };
 		A4E465182A35634900DD8B86 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E465172A35634900DD8B86 /* SceneDelegate.swift */; };
 		A4E465202A35634900DD8B86 /* Schreiber.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A4E4651E2A35634900DD8B86 /* Schreiber.xcdatamodeld */; };
@@ -68,7 +72,7 @@
 		A41B87202A3A76DF000415AD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A41B87222A3A76DF000415AD /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		A41B87472A3A7D47000415AD /* ViewControllerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPreview.swift; sourceTree = "<group>"; };
-		A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
+		A41B874A2A3AAA4A000415AD /* SidebarViewControllerOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewControllerOld.swift; sourceTree = "<group>"; };
 		A422B73C2A44FED1000BB5F7 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		A4395B852A51E8AF007F6AE4 /* NoteCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteCellView.swift; sourceTree = "<group>"; };
 		A4395B8C2A51E917007F6AE4 /* ViewHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewHelper.swift; sourceTree = "<group>"; };
@@ -77,9 +81,13 @@
 		A4395B962A522B40007F6AE4 /* TrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashView.swift; sourceTree = "<group>"; };
 		A45580EE2A4517E700EAE94F /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
 		A48584852C23B64B007DBE28 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
-		A489CBEB2A3BEA6900A26715 /* NoteEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorViewController.swift; sourceTree = "<group>"; };
+		A48584872C24F122007DBE28 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
+		A48584892C24F1D7007DBE28 /* Sidebar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Sidebar.xib; sourceTree = "<group>"; };
+		A489CBEB2A3BEA6900A26715 /* NoteEditorViewControllerOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorViewControllerOld.swift; sourceTree = "<group>"; };
 		A49FD8382A3FB0DE00F47139 /* NoteEditorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoteEditorView.xib; sourceTree = "<group>"; };
 		A4B12DF22A3BE3E1002F4E2C /* NotesViewControllerOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewControllerOld.swift; sourceTree = "<group>"; };
+		A4B320DE2C2A6C9900B47E93 /* SidebarCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarCellView.swift; sourceTree = "<group>"; };
+		A4B320E02C2B46F500B47E93 /* TrashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashViewController.swift; sourceTree = "<group>"; };
 		A4D4816C2A3918F300A96721 /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		A4E465122A35634900DD8B86 /* Schreiber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Schreiber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4E465152A35634900DD8B86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -158,11 +166,12 @@
 			isa = PBXGroup;
 			children = (
 				A4003D922A3FA38900D3DC8E /* SidebarView.xib */,
-				A41B874A2A3AAA4A000415AD /* SidebarViewController.swift */,
+				A41B874A2A3AAA4A000415AD /* SidebarViewControllerOld.swift */,
 				A4003D962A3FA58500D3DC8E /* NotesView.xib */,
 				A4B12DF22A3BE3E1002F4E2C /* NotesViewControllerOld.swift */,
 				A49FD8382A3FB0DE00F47139 /* NoteEditorView.xib */,
-				A489CBEB2A3BEA6900A26715 /* NoteEditorViewController.swift */,
+				A489CBEB2A3BEA6900A26715 /* NoteEditorViewControllerOld.swift */,
+				A48584892C24F1D7007DBE28 /* Sidebar.xib */,
 			);
 			path = Old;
 			sourceTree = "<group>";
@@ -171,8 +180,10 @@
 			isa = PBXGroup;
 			children = (
 				A4003D942A3FA4D000D3DC8E /* MainViewController.swift */,
-				A4395B922A521318007F6AE4 /* NoteEditorController.swift */,
+				A48584872C24F122007DBE28 /* SidebarViewController.swift */,
 				A48584852C23B64B007DBE28 /* NotesViewController.swift */,
+				A4B320E02C2B46F500B47E93 /* TrashViewController.swift */,
+				A4395B922A521318007F6AE4 /* NoteEditorController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -183,6 +194,7 @@
 				A422B73C2A44FED1000BB5F7 /* SidebarView.swift */,
 				A45580EE2A4517E700EAE94F /* NotesView.swift */,
 				A4395B962A522B40007F6AE4 /* TrashView.swift */,
+				A4B320DE2C2A6C9900B47E93 /* SidebarCellView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -317,6 +329,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A485848A2C24F1D7007DBE28 /* Sidebar.xib in Resources */,
 				A4540BD52A472BFB00A656FB /* NotesView.xib in Resources */,
 				A41B871E2A3A76DF000415AD /* Assets.xcassets in Resources */,
 				A41B87212A3A76DF000415AD /* Main.storyboard in Resources */,
@@ -343,6 +356,7 @@
 			files = (
 				A41B87482A3A7D47000415AD /* ViewControllerPreview.swift in Sources */,
 				A40A83E42A3A80A300259015 /* ViewPreview.swift in Sources */,
+				A4B320E12C2B46F500B47E93 /* TrashViewController.swift in Sources */,
 				A4395B932A521318007F6AE4 /* NoteEditorController.swift in Sources */,
 				A4003D852A3EC17700D3DC8E /* MainWindowController.swift in Sources */,
 				A41B87452A3A7BFF000415AD /* NSManagedObjectContext+Helpers.swift in Sources */,
@@ -353,11 +367,13 @@
 				A41B87462A3A7C02000415AD /* Models.swift in Sources */,
 				A4B12DF32A3BE3E1002F4E2C /* NotesViewControllerOld.swift in Sources */,
 				A45580F02A4517E700EAE94F /* NotesView.swift in Sources */,
+				A4B320DF2C2A6C9900B47E93 /* SidebarCellView.swift in Sources */,
 				A4395B982A522B40007F6AE4 /* TrashView.swift in Sources */,
+				A48584882C24F122007DBE28 /* SidebarViewController.swift in Sources */,
 				A41B87192A3A76DE000415AD /* ViewController.swift in Sources */,
-				A41B874C2A3AAA7B000415AD /* SidebarViewController.swift in Sources */,
+				A41B874C2A3AAA7B000415AD /* SidebarViewControllerOld.swift in Sources */,
 				A422B73E2A44FED1000BB5F7 /* SidebarView.swift in Sources */,
-				A489CBEC2A3BEA6900A26715 /* NoteEditorViewController.swift in Sources */,
+				A489CBEC2A3BEA6900A26715 /* NoteEditorViewControllerOld.swift in Sources */,
 				A4395B8E2A51F2B1007F6AE4 /* NoteCellView.swift in Sources */,
 				A41B87172A3A76DE000415AD /* AppDelegate.swift in Sources */,
 				A48584862C23B64B007DBE28 /* NotesViewController.swift in Sources */,

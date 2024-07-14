@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class NoteEditorViewController: NSViewController {
+class NoteEditorViewControllerOld: NSViewController {
 
     @IBOutlet var editor: NSTextView!
 

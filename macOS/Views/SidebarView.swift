@@ -12,10 +12,7 @@ struct SidebarView: View {
     @FetchRequest(sortDescriptors: [SortDescriptor<Folder>(\.name)],
                   animation: .default) private var folders
     @State var selectedItem: SidebarItem? = nil
-    var groups = [
-        NoteGroup.allNotes,
-        NoteGroup.trash
-    ]
+    var groups = [NoteGroup.allNotes, NoteGroup.trash]
     var handler: ((SidebarItem) -> Void)? = nil
     
     var body: some View {
@@ -40,6 +37,9 @@ struct SidebarView: View {
             if let handler = handler, let newValue = newValue {
                 handler(newValue)
             }
+        }
+        .onAppear {
+            selectedItem = .group(NoteGroup.allNotes)
         }
     }
     

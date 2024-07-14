@@ -18,12 +18,14 @@ class MainViewController: NSSplitViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        sidebar = NSSplitViewItem(
-            sidebarWithViewController: NSHostingController(
-                rootView: SidebarView(handler: onNoteGroupSelection)
-                    .environment(\.managedObjectContext, dataController.context)
-            )
-        )
+        // let vc = NSHostingController(
+        //     rootView: SidebarView(handler: onNoteGroupSelection)
+        //         .environment(\.managedObjectContext, dataController.context)
+        // )
+        // let vc = SidebarViewControllerOld(nibName: "SidebarView", bundle: nil)
+        let vc = SidebarViewController()
+
+        sidebar = NSSplitViewItem(sidebarWithViewController: vc)
         addSplitViewItem(sidebar)
 
         notesView = NSSplitViewItem(
@@ -33,6 +35,8 @@ class MainViewController: NSSplitViewController {
 
         noteEditor = NSSplitViewItem(viewController: makePlaceholderVC(""))
         addSplitViewItem(noteEditor)
+        
+        onNoteGroupSelection(newItem: .group(.allNotes))
     }
         
     func makePlaceholderVC(_ text: String) -> NSViewController {
@@ -74,7 +78,7 @@ class MainViewController: NSSplitViewController {
                 // )
                 
                 // vc = NotesViewControllerOld(nibName: "NotesView", bundle: nil)
-                vc = NotesViewController()
+                vc = NotesViewController(handler: onNoteSelection)
             } else {
                 // Trash
                 vc = NSHostingController(

@@ -50,10 +50,11 @@ class NoteEditorController: NSViewController {
         
         // Delete if the content is empty
         // Save if there are changes
-        if note.safeContent == "" {
-            dataController.delete(note)
-            dataController.save()
-        } else if initialContent != note.safeContent {
+        // if note.safeContent == "" {
+        //     dataController.delete(note)
+        //     dataController.save()
+        // } else 
+        if initialContent != note.safeContent {
             note.date = Date.now
             dataController.save()
         }

@@ -1,6 +1,6 @@
 //
-//  SidebarViewController.swift
-//  Schreiber (iOS)
+//  SidebarViewControllerOld.swift
+//  Schreiber (macOS)
 //
 //  Created by Arvind on 6/14/23.
 //
@@ -8,7 +8,7 @@
 import Cocoa
 import SwiftUI
 
-class SidebarViewController: NSViewController {
+class SidebarViewControllerOld: NSViewController {
     
     let dataController = (NSApplication.shared.delegate as! AppDelegate).controller
     
@@ -58,11 +58,11 @@ class SidebarViewController: NSViewController {
     
 }
 
-extension SidebarViewController: NSFetchedResultsControllerDelegate {
+extension SidebarViewControllerOld: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = dataSource.snapshot()
-
+        
         // Reload data if there are changes
         let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
             guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
@@ -72,7 +72,7 @@ extension SidebarViewController: NSFetchedResultsControllerDelegate {
             return itemIdentifier
         }
         snapshot.reloadItems(reloadIdentifiers)
-
+        
         // dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: collectionView.numberOfSections != 0)
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
     }
